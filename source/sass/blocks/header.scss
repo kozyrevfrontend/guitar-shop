@@ -1,0 +1,34 @@
+.header__wrapper {
+  display: flex;
+
+  padding-top: 20px;
+  padding-right: 44px;
+  padding-bottom: 16px;
+  padding-left: 40px;
+
+  background-color: rgba(#1e0906, 0.15%);
+}
+
+.header__logo {
+  margin-right: 94px;
+}
+
+.header__nav {
+  margin-top: 25px;
+  margin-right: auto;
+}
+
+.header__menu {
+  margin-top: 15px;
+}
+
+.header__image-container {
+  margin-top: -38px;
+
+  img {
+    width: 100%;
+    height: 298px;
+
+    object-fit: cover;
+  }
+}

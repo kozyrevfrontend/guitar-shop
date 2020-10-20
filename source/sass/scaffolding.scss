@@ -1,0 +1,20 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0 auto;
+  padding: 0;
+
+  font-family: "Droid Sans", "Arial", sans-serif;
+}
+
+a {
+  text-decoration: none;
+}

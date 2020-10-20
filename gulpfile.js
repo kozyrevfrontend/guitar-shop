@@ -1,70 +1,67 @@
-`use strict`;
+"use strict";
 
-const { src, dest, watch, series } = require(`gulp`);
-const plumber = require(`gulp-plumber`);
-const sourcemap = require(`gulp-sourcemaps`);
-const sass = require(`gulp-sass`);
-const postcss = require(`gulp-postcss`);
-const autoprefixer = require(`autoprefixer`);
-const server = require(`browser-sync`).create();
-const csso = require(`gulp-csso`);
-const rename = require(`gulp-rename`);
-const imagemin = require(`gulp-imagemin`);
-const webp = require(`gulp-webp`);
-const svgstore = require(`gulp-svgstore`);
-const posthtml = require(`gulp-posthtml`);
-const include = require(`posthtml-include`);
-const concat = require(`gulp-concat`);
-const del = require(`del`);
-const rollup = require(`gulp-better-rollup`);
-const resolve = require(`rollup-plugin-node-resolve`);
-const commonjs = require(`rollup-plugin-commonjs`);
+var gulp = require("gulp");
+var plumber = require("gulp-plumber");
+var sourcemap = require("gulp-sourcemaps");
+var sass = require("gulp-sass");
+var postcss = require("gulp-postcss");
+var autoprefixer = require("autoprefixer");
+var server = require("browser-sync").create();
+var csso = require("gulp-csso");
+var rename = require("gulp-rename");
+var imagemin = require("gulp-imagemin");
+var webp = require("gulp-webp");
+var svgstore = require("gulp-svgstore");
+var posthtml = require("gulp-posthtml");
+var include = require("posthtml-include");
+var concat = require("gulp-concat");
+var del = require("del");
+var gulp = require("gulp");
+var rollup = require("gulp-better-rollup");
+var resolve = require(`rollup-plugin-node-resolve`);
+var commonjs = require(`rollup-plugin-commonjs`);
 
-const css = () => {
-  return src(`source/sass/style.scss`)
+gulp.task("css", function () {
+  return gulp
+    .src("source/sass/style.scss")
     .pipe(plumber())
     .pipe(sourcemap.init())
     .pipe(sass())
     .pipe(postcss([autoprefixer()]))
     .pipe(csso())
-    .pipe(rename(`style.min.css`))
-    .pipe(sourcemap.write(`.`))
-    .pipe(dest(`build/css`))
+    .pipe(rename("style.min.css"))
+    .pipe(sourcemap.write("."))
+    .pipe(gulp.dest("build/css"))
     .pipe(server.stream());
-};
+});
 
-exports.css = css;
-
-const createServer = () => {
+gulp.task("server", function () {
   server.init({
-    server: `build/`,
+    server: "build/",
     notify: false,
     open: true,
     cors: true,
     ui: false,
   });
 
-  watch(`source/sass/**/*.{scss,sass}`, series(css));
-  watch(`source/img/icon-*.svg`, series(sprite, html, refresh));
-  watch(`source/*.html`, series(html, refresh));
-  watch(
-    [`source/js/main.js`, `source/js/components/**/*.js`],
-    series(jsMain, refresh)
+  gulp.watch("source/sass/**/*.{scss,sass}", gulp.series("css"));
+  gulp.watch("source/img/icon-*.svg", gulp.series("sprite", "html", "refresh"));
+  gulp.watch("source/*.html", gulp.series("html", "refresh"));
+  gulp.watch(
+    ["source/js/main.js", "source/js/components/**/*.js"],
+    gulp.series("js-main", "refresh")
   );
-  watch(`source/js/vendor.js`, series(jsVendor, refresh));
-};
+  gulp.watch("source/js/vendor.js", gulp.series("js-vendor", "refresh"));
+});
 
-exports.createServer = createServer;
-
-const refresh = (done) => {
+gulp.task("refresh", function (done) {
   server.reload();
   done();
-};
+});
 
-exports.refresh = refresh;
-
-const images = () => {
-  return src(`source/img/**/*.{png,jpg,svg}`)
+gulp.task("images", function () {
+  return gulp
+    .src("source/img/**/*.{png,jpg,svg}")
     .pipe(
       imagemin([
         imagemin.optipng({ optimizationLevel: 3 }),
@@ -73,90 +70,71 @@ const images = () => {
       ])
     )
 
-    .pipe(dest(`source/img`));
-};
+    .pipe(gulp.dest("source/img"));
+});
 
-exports.images = images;
-
-const convertWebp = () => {
-  return src(`source/img/**/*.{png,jpg}`)
+gulp.task("webp", function () {
+  return gulp
+    .src("source/img/**/*.{png,jpg}")
     .pipe(webp({ quality: 90 }))
-    .pipe(dest(`source/img`));
-};
+    .pipe(gulp.dest("source/img"));
+});
 
-exports.convertWebp = convertWebp;
-
-const sprite = () => {
-  return src(`source/img/{icon-*,logo-*,htmlacademy*}.svg`)
+gulp.task("sprite", function () {
+  return gulp
+    .src("source/img/{icon-*,logo-*,htmlacademy*}.svg")
     .pipe(svgstore({ inlineSvg: true }))
-    .pipe(rename(`sprite_auto.svg`))
-    .pipe(dest(`build/img`));
-};
+    .pipe(rename("sprite_auto.svg"))
+    .pipe(gulp.dest("build/img"));
+});
 
-exports.sprite = sprite;
-
-const html = () => {
-  return src(`source/*.html`)
+gulp.task("html", function () {
+  return gulp
+    .src("source/*.html")
     .pipe(posthtml([include()]))
-    .pipe(dest(`build`));
-};
+    .pipe(gulp.dest("build"));
+});
 
-exports.html = html;
-
-const copy = () => {
-  return src([`source/fonts/**/*.{woff,woff2}`, `source/img/**`, `source//*.ico`], {
-      base: `source`,
+gulp.task("copy", function () {
+  return gulp
+    .src(["source/fonts/**/*.{woff,woff2}", "source/img/**", "source//*.ico"], {
+      base: "source",
     })
-    .pipe(dest(`build`));
-};
+    .pipe(gulp.dest("build"));
+});
 
-exports.copy = copy;
-
-const jsMain = () => {
+gulp.task("js-main", () => {
   return (
-    src(`source/js/main.js`)
+    gulp
+      .src("source/js/main.js")
       .pipe(sourcemap.init())
-      .pipe(rollup({}, `iife`))
-      .pipe(sourcemap.write(``))
-      .pipe(dest(`build/js`))
+      // note that UMD and IIFE format requires `name` but it will be inferred from the source file name `mylibrary.js`
+      .pipe(rollup({}, "iife"))
+      // save sourcemap as separate file (in the same folder)
+      .pipe(sourcemap.write(""))
+      .pipe(gulp.dest("build/js"))
   );
-};
+});
 
-exports.jsMain = jsMain;
-
-const jsVendor = () => {
+gulp.task("js-vendor", () => {
   return (
-    src(`source/js/vendor.js`)
+    gulp
+      .src("source/js/vendor.js")
       .pipe(sourcemap.init())
-      .pipe(rollup({ plugins: [resolve(), commonjs()] }, `iife`))
-      .pipe(sourcemap.write(``))
-      .pipe(dest(`build/js`))
+      // note that UMD and IIFE format requires `name` but it will be inferred from the source file name `mylibrary.js`
+      .pipe(rollup({ plugins: [resolve(), commonjs()] }, "iife"))
+      // save sourcemap as separate file (in the same folder)
+      .pipe(sourcemap.write(""))
+      .pipe(gulp.dest("build/js"))
   );
-};
+});
 
-exports.jsVendor = jsVendor;
+gulp.task("clean", function () {
+  return del("build");
+});
 
-const clean = () => {
-  return del(`build`);
-};
-
-exports.clean = clean;
-
-const build = async () => {
-  series(
-    clean,
-    copy,
-    css,
-    sprite,
-    html,
-    jsMain,
-    jsVendor
-  );
-};
-
-exports.build = build;
-
-exports.start = series(
-  build,
-  createServer
+gulp.task(
+  "build",
+  gulp.series("clean", "copy", "css", "sprite", "html", "js-main", "js-vendor")
 );
+gulp.task("start", gulp.series("build", "server"));

@@ -13,12 +13,55 @@
     <link rel="stylesheet" href="css/style.min.css">
   </head>
   <body>
-    <h1 class="visually-hidden">
-      ЛИГА Банк - оффициальный сайт всемирного банка.
-    </h1>
-
+    <!--Header-->
+    <header class="header">
+      <div class="header__wrapper">
+        <a class="header__logo logo">
+          <img src="img/logo-header.svg" alt="Guitar shop" width="67" height="70">
+        </a>
+        <nav class="header__nav">
+          <ul class="site-list">
+            <li class="site-list__item">
+              <a class="site-list__link" href="#">Каталог</a>
+            </li>
+            <li class="site-list__item">
+              <a class="site-list__link" href="#">Где купить?</a>
+            </li>
+            <li class="site-list__item">
+              <a class="site-list__link" href="#">О компании</a>
+            </li>
+            <li class="site-list__item">
+              <a class="site-list__link" href="#">Cервис-центры</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="header__menu user-menu">
+          <a class="user-menu__link" href="#">
+            <svg width="14" height="17">
+              <use href="img/sprite_auto.svg#icon-pin"></use>
+            </svg>
+          </a>
+          <a class="user-menu__link" href="#">
+            <svg width="14" height="14">
+              <use href="img/sprite_auto.svg#icon-search"></use>
+            </svg>
+          </a>
+          <a class="user-menu__link user-menu__link--basket" href="#">
+            <svg width="14" height="14">
+              <use href="img/sprite_auto.svg#icon-basket"></use>
+            </svg>
+            <span class="user-menu__value">2</span>
+          </a>
+        </div>
+      </div>
+      <div class="header__image-container">
+        <picture>
+          <source type="image/webp" srcset="img/header-bg@1x.webp 1x, img/header-bg@2x.webp 2x">
+          <img src="img/header-bg@1x.png" srcset="img/header-bg@2x.png 2x" alt="Гитара" width="1020" height="298">
+        </picture>
+      </div>
+    </header>
     <script src="js/vendor.js"></script>
-
     <script src="js/main.js"></script>
   </body>
 </html>
