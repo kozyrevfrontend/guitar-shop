@@ -26,10 +26,10 @@
 
   &:hover,
   &:focus {
-    color: #b04f00;
+    color: #474747;
   }
 
   &:active {
-    opacity: 0.7;
+    color: rgba(#474747, 0.5%);
   }
 }

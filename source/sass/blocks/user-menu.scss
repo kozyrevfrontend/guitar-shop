@@ -11,6 +11,8 @@
   height: 40px;
   margin-right: 10px;
 
+  color: #000000;
+
   &:last-child {
     margin-right: 0;
   }
@@ -25,11 +27,11 @@
 
   &:hover,
   &:focus {
-    opacity: 0.8;
+    color: #474747;
   }
 
   &:active {
-    opacity: 0.6;
+    color: rgba(#474747, 0.5%);
   }
 }
 
