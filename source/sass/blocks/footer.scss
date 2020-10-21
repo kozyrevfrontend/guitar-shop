@@ -1,3 +1,7 @@
+.footer {
+  min-width: 1020px;
+}
+
 .footer__image-container {
   display: flex;
   justify-content: flex-start;
@@ -19,6 +23,12 @@ main {
 .footer__wrapper {
   position: relative;
   z-index: 10;
+
+  display: flex;
+
+  padding-top: 61px;
+  padding-left: 41px;
+  padding-right: 50px;
   margin-top: -213px;
   height: 273px;
 
@@ -34,5 +44,56 @@ main {
     height: 6px;
 
     background-color: #3f3f3f;
+  }
+}
+
+.footer__wrapper-inner {
+  margin-right: 13.1%;
+}
+
+.footer__logo {
+  display: block;
+  margin-bottom: 51px;
+}
+
+.footer__about-us {
+  margin-right: 2%;
+}
+
+.footer__catalog-list {
+  margin-right: 4.6%;
+}
+
+.footer__information {
+  margin-right: 4.6%;
+}
+
+.footer__contacts {
+  margin-left: auto;
+}
+
+@media (min-width: 1150px) {
+  .footer__wrapper {
+    justify-content: space-between;
+  }
+
+  .footer__wrapper-inner {
+    margin-right: 0;
+  }
+
+  .footer__about-us {
+    margin-right: 0;
+  }
+
+  .footer__catalog-list {
+    margin-right: 0;
+  }
+
+  .footer__information {
+    margin-right: 0;
+  }
+
+  .footer__contacts {
+    margin-left: 0;
   }
 }

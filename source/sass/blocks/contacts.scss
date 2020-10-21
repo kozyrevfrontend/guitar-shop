@@ -1,0 +1,46 @@
+.contacts {
+  width: 130px;
+  padding-top: 16px;
+  padding-right: 6px;
+}
+
+.contacts__title {
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0.1em;
+  color: #ffffff;
+  opacity: 0.7;
+}
+
+.contacts__address,
+.contacts__hours {
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 12px;
+  letter-spacing: 0.1em;
+  color: #ffffff;
+}
+
+.contacts__link {
+  display: block;
+
+  color: #ffffff;
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+.contacts__hours {
+  span {
+    display: block;
+  }
+}
