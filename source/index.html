@@ -62,7 +62,140 @@
       </div>
     </header>
 
-    <main></main>
+    <!--Main-->
+    <main class="main">
+      <h1 class="main__title">Каталог гитар</h1>
+      <ul class="breadcrumbs">
+        <li class="breadcrumbs__item">
+          <a class="breadcrumbs__link" href="#">Главная</a>
+        </li>
+        <li class="breadcrumbs__item">
+          <a class="breadcrumbs__link" href="#">Каталог</a>
+        </li>
+      </ul>
+
+      <section class="filters">
+        <h2 class="filters__title">Фильтр</h2>
+        <form class="filters__form" method="POST" action="https://echo.htmlacademy.ru">
+          <fieldset class="filters__fieldset">
+            <h3 class="filters__fieldset-title">Цена, ₽</h3>
+            <div class="filters__price-controls">
+              <p>
+                <label class="visually-hidden" for="price-min">Минимальная цена</label>
+                <input id="price-min" type="text" inputmode="numeric" placeholder="1 000" name="price-min">
+              </p>
+              <p>
+                <label class="visually-hidden" for="price-max">Максимальная цена</label>
+                <input id="price-max" type="text" inputmode="numeric" placeholder="30 000" name="price-max">
+              </p>
+            </div>
+          </fieldset>
+          <fieldset class="filters__fieldset">
+            <h3 class="filters__fieldset-title">Тип гитар</h3>
+            <ul class="filters__options">
+              <li class="filters__item">
+                <label for="acoustic">Акустические гитары</label>
+                <input class="visually-hidden" id="acoustic" type="checkbox" name="acoustic">
+              </li>
+              <li class="filters__item">
+                <label for="electro">Электрогитары</label>
+                <input class="visually-hidden" id="electro" type="checkbox" name="electro" checked>
+              </li>
+              <li class="filters__item">
+                <label for="ukelele">Укулеле</label>
+                <input class="visually-hidden" id="ukelele" type="checkbox" name="ukelele" checked>
+              </li>
+            </ul>
+          </fieldset>
+          <fieldset class="filters__fieldset">
+            <h3 class="filters__fieldset-title">Количество струн</h3>
+            <ul class="filters__options">
+              <li class="filters__item">
+                <label for="four-strings">4</label>
+                <input class="visually-hidden" id="four-strings" type="checkbox" name="four-strings" checked>
+              </li>
+              <li class="filters__item">
+                <label for="six-strings">6</label>
+                <input class="visually-hidden" id="six-strings" type="checkbox" name="six-strings" checked>
+              </li>
+              <li class="filters__item">
+                <label for="seven-strings">7</label>
+                <input class="visually-hidden" id="seven-strings" type="checkbox" name="seven-strings">
+              </li>
+              <li class="filters__item">
+                <label for="twelve-strings">12</label>
+                <input class="visually-hidden" id="twelve-strings" type="checkbox" name="twelve-strings" disabled>
+              </li>
+            </ul>
+          </fieldset>
+          <button class="filters__button" type="submit">Показать</button>
+        </form>
+      </section>
+
+      <div class="main__wrapper">
+        <section class="sort">
+          <h2 class="visually-hidden">Сортировка товаров</h2>
+          <p class="sort__title">Сортировать:</p>
+          <ul class="sort__options">
+            <li class="sort__item">
+              <button>по цене</button>
+            </li>
+            <li class="sort__item">
+              <button>по популярности</button>
+            </li>
+            <li class="sort__item">
+              <button>
+                <span class="visually-hidden">по возрастанию</span>
+                <svg width="22" height="22">
+                  <use href="img/sprite_auto.svg#icon-arrow-up"></use>
+                </svg>
+              </button>
+            </li>
+            <li class="sort__item">
+              <button>
+                <span class="visually-hidden">по убыванию</span>
+                <svg width="22" height="22">
+                  <use href="img/sprite_auto.svg#icon-arrow-down"></use>
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </section>
+
+        <section class="catalog">
+          <h2 class="visually-hidden">Каталог гитар</h2>
+          <ul class="catalog__list">
+            <li class="catalog__item card">
+              <div class="card__info">
+                <h3 class="card__title">Честер Bass</h3>
+                <span class="card__price">17 500 ₽</span>
+                <div class="card__popularity-wrapper">
+                  <div class="card__rating">
+                    <svg width="12" height="12"><use href="img/sprite_auto.svg#icon-star"></use></svg>
+                    <svg width="12" height="12"><use href="img/sprite_auto.svg#icon-star"></use></svg>
+                    <svg width="12" height="12"><use href="img/sprite_auto.svg#icon-star"></use></svg>
+                    <svg width="12" height="12"><use href="img/sprite_auto.svg#icon-star"></use></svg>
+                    <svg width="12" height="12"><use href="img/sprite_auto.svg#icon-star"></use></svg>
+                  </div>
+                  <span class="card__popularity">15</span>
+                </div>
+                <a class="card__link-more" href="#">Подробнее</a>
+                <button class="card" type="button">
+                  <svg width="12" height="12">
+                    <use href="img/sprite_auto.svg#icon-shoping-bag"></use>
+                  </svg>
+                  <span>Купить</span>
+                </button>
+              </div>
+              <picture>
+                <source type="image/webp" srcset="img/card-electro1@1x.webp 1x, img/card-electro1@2x.webp 2x">
+                <img src="img/card-electro1@1x.png" srcset="img/card-electro1@2x.png 2x" alt="Честер Bass">
+              </picture>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </main>
 
     <!--Footer-->
     <footer class="footer">
