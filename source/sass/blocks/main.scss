@@ -1,0 +1,24 @@
+.main {
+  min-width: 1020px;
+  padding-left: 40px;
+  padding-right: 40px;
+  margin-top: -50px;
+}
+
+.main__title {
+  margin: 0;
+  margin-bottom: 19px;
+
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 26px;
+  color: #000000;
+}
+
+.main__wrapper {
+  display: flex;
+}
+
+.main__wrapper-inner {
+  flex-grow: 1;
+}

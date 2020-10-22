@@ -1,0 +1,52 @@
+.breadcrumbs {
+  @include list-reset;
+
+  display: flex;
+  margin-bottom: 49px;
+}
+
+.breadcrumbs__item {
+  position: relative;
+
+  margin-right: 40px;
+
+  &::before {
+    content: "";
+
+    position: absolute;
+    top: 7px;
+    right: -32px;
+
+    display: block;
+    width: 16px;
+    height: 16px;
+
+    background-image: url("../img/icon-arrow-right.svg");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+  }
+
+  &:last-child {
+    margin-right: 0;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+.breadcrumbs__link {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19px;
+  color: #474747;
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}
