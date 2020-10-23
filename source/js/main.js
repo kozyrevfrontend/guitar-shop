@@ -1,3 +1,5 @@
+// создать объект ui
+
 const data = {
   SO757575: {
     partNumber: `SO757575`,
