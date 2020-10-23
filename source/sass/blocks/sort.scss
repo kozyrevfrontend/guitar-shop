@@ -1,6 +1,7 @@
 .sort {
   display: flex;
   padding-top: 2px;
+  margin-bottom: 23px;
 }
 
 .sort__title {
@@ -41,7 +42,7 @@
       color: #000000;
     }
 
-    &:active{
+    &:active {
       opacity: 0.8;
     }
   }
