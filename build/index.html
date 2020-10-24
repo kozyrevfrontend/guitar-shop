@@ -100,11 +100,11 @@
                   <label for="acoustic">Акустические гитары</label>
                 </li>
                 <li class="filters__item">
-                  <input class="visually-hidden" id="electro" type="checkbox" name="electro" checked="">
+                  <input class="visually-hidden" id="electro" type="checkbox" name="electro">
                   <label for="electro">Электрогитары</label>
                 </li>
                 <li class="filters__item">
-                  <input class="visually-hidden" id="ukelele" type="checkbox" name="ukelele" checked="">
+                  <input class="visually-hidden" id="ukelele" type="checkbox" name="ukelele">
                   <label for="ukelele">Укулеле</label>
                 </li>
               </ul>
@@ -113,11 +113,11 @@
               <h3 class="filters__fieldset-title">Количество струн</h3>
               <ul class="filters__options">
                 <li class="filters__item">
-                  <input class="visually-hidden" id="four-strings" type="checkbox" name="four-strings" checked="">
+                  <input class="visually-hidden" id="four-strings" type="checkbox" name="four-strings">
                   <label for="four-strings">4</label>
                 </li>
                 <li class="filters__item">
-                  <input class="visually-hidden" id="six-strings" type="checkbox" name="six-strings" checked="">
+                  <input class="visually-hidden" id="six-strings" type="checkbox" name="six-strings">
                   <label for="six-strings">6</label>
                 </li>
                 <li class="filters__item">
@@ -140,15 +140,15 @@
             <p class="sort__title">Сортировать:</p>
             <ul class="sort__options">
               <li class="sort__item">
-                <button>по цене</button>
+                <button id="sort-by-price">по цене</button>
               </li>
               <li class="sort__item">
-                <button>по популярности</button>
+                <button id="sort-by-popularity">по популярности</button>
               </li>
             </ul>
             <ul class="sort__view">
               <li class="sort__view-item">
-                <button>
+                <button id="sort-flow-up">
                   <span class="visually-hidden">по возрастанию</span>
                   <svg width="22" height="22">
                     <use href="img/sprite_auto.svg#icon-arrow-up"></use>
@@ -156,7 +156,7 @@
                 </button>
               </li>
               <li class="sort__view-item">
-                <button>
+                <button id="sort-flow-down">
                   <span class="visually-hidden">по убыванию</span>
                   <svg width="22" height="22">
                     <use href="img/sprite_auto.svg#icon-arrow-down"></use>
@@ -167,33 +167,10 @@
           </section>
 
           <section class="catalog">
-            <ul class="catalog__list">
-              <!-- <li class="catalog__item card">
-                <h3 class="card__title">Честер Bass</h3>
-                <span class="card__price">17 500 ₽</span>
-                <div class="card__popularity-wrapper">
-                  <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-                  <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-                  <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-                  <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-                  <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-                  <span class="card__popularity">15</span>
-                </div>
-                <a class="card__link-more" href="#"><span>Подробнее</span></a>
-                <button class="card__button" type="button">
-                  <svg width="12" height="12">
-                    <use href="img/sprite_auto.svg#icon-shoping-bag"></use>
-                  </svg>
-                  <span>Купить</span>
-                </button>
-                <div class="card__image">
-                  <picture>
-                    <source type="image/webp" srcset="img/card-electro1@1x.webp 1x, img/card-electro1@2x.webp 2x">
-                    <img src="img/card-electro1@1x.png" srcset="img/card-electro1@2x.png 2x" alt="Честер Bass">
-                  </picture>
-                </div>
-              </li> -->
-            </ul>
+            <ul class="catalog__list"></ul>
+          </section>
+          <section class="pagination">
+            <ul class="pagination__list"></ul>
           </section>
         </div>
       </div>
@@ -332,6 +309,11 @@
             <img src="" srcset="" alt="" width="68" height="190">
           </picture>
         </div>
+      </li>
+    </template>
+    <template id="pagination-item-template">
+      <li class="pagination__item">
+        <a class="pagination__link" href="#"></a>
       </li>
     </template>
     <script src="js/vendor.js"></script>

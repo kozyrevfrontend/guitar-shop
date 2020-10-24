@@ -1,8 +1,6 @@
 (function () {
   'use strict';
 
-  // создать объект ui
-
   const data = {
     SO757575: {
       partNumber: `SO757575`,
@@ -249,6 +247,45 @@
     }
   };
 
+  const ui = {
+    filters: {
+      price: {
+        min: ``,
+        max: ``
+      },
+      type: {
+        acoustic: false,
+        electro: false,
+        ukulele: false
+      },
+      strings: {
+        four: false,
+        six: false,
+        seven: false,
+        twelve: false
+      },
+
+      setFiltersValue(evt) {
+        this.price.min = evt.target[1].value;
+        this.price.max = evt.target[2].value;
+        this.type.acoustic = evt.target[4].checked;
+        this.type.electro = evt.target[5].checked;
+        this.type.ukulele = evt.target[6].checked;
+        this.strings.four = evt.target[8].checked;
+        this.strings.six = evt.target[9].checked;
+        this.strings.seven = evt.target[10].checked;
+        this.strings.twelve = evt.target[11].checked;
+      }
+    },
+
+    sort: {
+      type: ``,
+      flow: ``
+    },
+
+    currentPage: 1
+  };
+
   const catalogList = document.querySelector(`.catalog__list`);
   const cardTemplate = document.querySelector(`#card-template`).content.querySelector(`.card`);
 
@@ -274,14 +311,93 @@
     return cardElement;
   };
 
-  const fragment = document.createDocumentFragment();
-  for (const key in data) {
-    if (key) {
-      fragment.appendChild(renderCard(data[key]));
-    }
+  let page = ui.currentPage;
+  const itemsPerPage = 9;
+  let offset = 0;
+
+  const paginationList = document.querySelector(`.pagination__list`);
+  const paginationItemTemplate = document.querySelector(`#pagination-item-template`).content.querySelector(`.pagination__item`);
+
+  const renderPagination = (count) => {
+    const paginationItem = paginationItemTemplate.cloneNode(true);
+    paginationItem.querySelector(`.pagination__link`).textContent = count;
+
+    return paginationItem;
+  };
+
+  const paginationFragment = document.createDocumentFragment();
+
+  for (let i = 1; i <= Math.ceil(Object.values(data).length / itemsPerPage); i++) {
+    paginationFragment.appendChild(renderPagination(i));
   }
 
+  paginationList.appendChild(paginationFragment);
+
+  const paginationLinks = document.querySelectorAll(`.pagination__link`);
+
+  const paginationLinkClickHandler = (evt) => {
+    evt.preventDefault();
+
+    page = evt.target.textContent;
+
+    offset = (page - 1) * itemsPerPage;
+
+    while (catalogList.firstChild) {
+      catalogList.removeChild(catalogList.firstChild);
+    }
+
+    const fragment = document.createDocumentFragment();
+    Object.values(data).slice(offset, offset + itemsPerPage).forEach((item) => {
+      fragment.appendChild(renderCard(item));
+    });
+
+    catalogList.appendChild(fragment);
+  };
+
+  paginationLinks.forEach((link) => {
+    link.addEventListener(`click`, paginationLinkClickHandler);
+  });
+
+  const fragment = document.createDocumentFragment();
+  Object.values(data).slice(offset, offset + itemsPerPage).forEach((item) => {
+    fragment.appendChild(renderCard(item));
+  });
+
   catalogList.appendChild(fragment);
+
+  // играемся с UI
+  const filtersForm = document.querySelector(`.filters__form`);
+  filtersForm.addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+
+    ui.filters.setFiltersValue(evt);
+    console.dir(evt);
+    console.dir(ui);
+  });
+
+  const sortByPriceButton = document.querySelector(`#sort-by-price`);
+  sortByPriceButton.addEventListener(`click`, () => {
+    ui.sort.type = `by-price`;
+    console.dir(ui);
+  });
+
+  const sortByPopularityButton = document.querySelector(`#sort-by-popularity`);
+  sortByPopularityButton.addEventListener(`click`, () => {
+    ui.sort.type = `by-popularity`;
+    console.dir(ui);
+  });
+
+  const sortFlowUpButton = document.querySelector(`#sort-flow-up`);
+  sortFlowUpButton.addEventListener(`click`, () => {
+    ui.sort.flow = `up`;
+    console.dir(ui);
+  });
+
+  const sortFlowDownButton = document.querySelector(`#sort-flow-down`);
+  sortFlowDownButton.addEventListener(`click`, () => {
+    ui.sort.flow = `down`;
+    console.dir(ui);
+  });
 
 }());
 
