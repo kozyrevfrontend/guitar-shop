@@ -278,9 +278,7 @@ const ui = {
   sort: {
     type: ``,
     flow: ``
-  },
-
-  currentPage: 1
+  }
 };
 
 const catalogList = document.querySelector(`.catalog__list`);
@@ -295,20 +293,20 @@ const renderCard = (card) => {
   cardImage.src = `img/${card.image}@1x.png`;
   cardImage.srcset = `img/${card.image}@2x.png 2x`;
   cardImage.alt = card.model;
-  const cardPopularityWrapper = cardElement.querySelector(`.card__popularity-wrapper`);
-  if (card.image === `card-electro1`) {
-    cardImage.width = `80`;
-    cardImage.height = `202`;
-    cardPopularityWrapper.style.marginTop = `-6px`;
-  } else if (card.image === `card-electro4`) {
-    cardImage.width = `84`;
-  }
+  // const cardPopularityWrapper = cardElement.querySelector(`.card__popularity-wrapper`);
+  // if (card.image === `card-electro1`) {
+  //   cardImage.width = `80`;
+  //   cardImage.height = `202`;
+  //   cardPopularityWrapper.style.marginTop = `-6px`;
+  // } else if (card.image === `card-electro4`) {
+  //   cardImage.width = `84`;
+  // }
   cardElement.querySelector(`source`).srcset = `img/${card.image}@1x.webp 1x, img/${card.image}@2x.webp 2x`;
 
   return cardElement;
 };
 
-let page = ui.currentPage;
+let page = 1;
 const itemsPerPage = 9;
 let offset = 0;
 
@@ -317,7 +315,7 @@ const paginationItemTemplate = document.querySelector(`#pagination-item-template
 
 const renderPagination = (count) => {
   const paginationItem = paginationItemTemplate.cloneNode(true);
-  paginationItem.querySelector(`.pagination__link`).textContent = count;
+  paginationItem.querySelector(`.pagination__link span`).textContent = count;
 
   return paginationItem;
 };
@@ -332,10 +330,18 @@ paginationList.appendChild(paginationFragment);
 
 const paginationLinks = document.querySelectorAll(`.pagination__link`);
 
+paginationLinks[0].classList.add(`pagination__link--current`);
+
 const paginationLinkClickHandler = (evt) => {
   evt.preventDefault();
 
   page = evt.target.textContent;
+
+  paginationLinks.forEach((link) => {
+    link.classList.remove(`pagination__link--current`);
+  });
+
+  evt.target.classList.add(`pagination__link--current`);
 
   offset = (page - 1) * itemsPerPage;
 
@@ -368,30 +374,25 @@ filtersForm.addEventListener(`submit`, (evt) => {
   evt.preventDefault();
 
   ui.filters.setFiltersValue(evt);
-  console.dir(evt);
-  console.dir(ui);
+  ui.filters.renderFilteredCatalog();
 });
 
 const sortByPriceButton = document.querySelector(`#sort-by-price`);
 sortByPriceButton.addEventListener(`click`, () => {
   ui.sort.type = `by-price`;
-  console.dir(ui);
 });
 
 const sortByPopularityButton = document.querySelector(`#sort-by-popularity`);
 sortByPopularityButton.addEventListener(`click`, () => {
   ui.sort.type = `by-popularity`;
-  console.dir(ui);
 });
 
 const sortFlowUpButton = document.querySelector(`#sort-flow-up`);
 sortFlowUpButton.addEventListener(`click`, () => {
   ui.sort.flow = `up`;
-  console.dir(ui);
 });
 
 const sortFlowDownButton = document.querySelector(`#sort-flow-down`);
 sortFlowDownButton.addEventListener(`click`, () => {
   ui.sort.flow = `down`;
-  console.dir(ui);
 });
