@@ -1,0 +1,153 @@
+.popup-add {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: none;
+}
+
+.popup-add__overlay {
+  position: relative;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(#585757, 0.6%);
+}
+
+.popup-add__add {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 740px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 31px;
+  padding-bottom: 30px;
+
+  background-color: #ffffff;
+  box-shadow: 0 5px 6px rgba(63, 63, 63, 0.2);
+
+  border-radius: 4px;
+
+  transform: translate(-50%, -50%);
+}
+
+.popup-add__add-wrapper {
+  position: relative;
+
+  display: flex;
+}
+
+.popup-add__add-title {
+  margin: 0;
+  margin-bottom: 23px;
+
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0.02em;
+  color: #474747;
+}
+
+.popup-add__add-description {
+  margin-left: 41px;
+  padding-top: 16px;
+}
+
+.popup-add__add-model {
+  margin: 0;
+  margin-bottom: 14px;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000000;
+}
+
+.popup-add__add-articule {
+  margin: 0;
+  margin-bottom: 6px;
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  color: #000000;
+}
+
+.popup-add__add-type {
+  margin: 0;
+  margin-bottom: 20px;
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  color: #000000;
+}
+
+.popup-add__add-price {
+  margin: 0;
+
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  color: #000000;
+}
+
+.popup-add__add-button {
+  display: block;
+  min-width: 220px;
+  height: 46px;
+  margin-left: auto;
+  margin-top: 16px;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+
+  background-color: #e27f00;
+
+  border: none;
+  border-radius: 2px;
+
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: #ffa839;
+  }
+
+  &:active {
+    background-color: #da8b26;
+  }
+}
+
+.popup-add__add-close {
+  position: absolute;
+  top: -49px;
+  right: -36px;
+
+  display: block;
+
+  border: none;
+  background-color: transparent;
+
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}
