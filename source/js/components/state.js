@@ -115,7 +115,7 @@ class State {
         type: `электрогитара`,
         popularity: 28,
         stringsNumber: 6,
-        price: `14 900`,
+        price: `14900`,
         image: `card-electro4`
       },
       VO519510: {
@@ -309,14 +309,6 @@ class State {
       this.filters.strings.push(value);
     };
 
-    this.setSortType = (value) => {
-      this.sort.type = value;
-    };
-
-    this.setSortFlow = (value) => {
-      this.sort.flow = value;
-    };
-
     this.getFilteredCatalogData = () => {
       const currentData = Object.values(this.catalogData);
 
@@ -337,6 +329,38 @@ class State {
       });
 
       return filteredData;
+    };
+
+    this.setSortType = (value) => {
+      this.sort.type = value;
+    };
+
+    this.setSortFlow = (value) => {
+      this.sort.flow = value;
+    };
+
+    this.getDataSortedByPrice = (data) => {
+      const catalogData = Object.values(data);
+
+      return catalogData.sort((a, b) => {
+        if (this.sort.flow === `down`) {
+          return parseInt(b.price, 10) - parseInt(a.price, 10);
+        } else {
+          return parseInt(a.price, 10) - parseInt(b.price, 10);
+        }
+      });
+    };
+
+    this.getDataSortedByPopularity = (data) => {
+      const catalogData = Object.values(data);
+
+      return catalogData.sort((a, b) => {
+        if (this.sort.flow === `down`) {
+          return b.popularity - a.popularity;
+        } else {
+          return a.popularity - b.popularity;
+        }
+      });
     };
   }
 }

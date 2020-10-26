@@ -118,7 +118,7 @@
           type: `электрогитара`,
           popularity: 28,
           stringsNumber: 6,
-          price: `14 900`,
+          price: `14900`,
           image: `card-electro4`
         },
         VO519510: {
@@ -312,14 +312,6 @@
         this.filters.strings.push(value);
       };
 
-      this.setSortType = (value) => {
-        this.sort.type = value;
-      };
-
-      this.setSortFlow = (value) => {
-        this.sort.flow = value;
-      };
-
       this.getFilteredCatalogData = () => {
         const currentData = Object.values(this.catalogData);
 
@@ -340,6 +332,38 @@
         });
 
         return filteredData;
+      };
+
+      this.setSortType = (value) => {
+        this.sort.type = value;
+      };
+
+      this.setSortFlow = (value) => {
+        this.sort.flow = value;
+      };
+
+      this.getDataSortedByPrice = (data) => {
+        const catalogData = Object.values(data);
+
+        return catalogData.sort((a, b) => {
+          if (this.sort.flow === `down`) {
+            return parseInt(b.price, 10) - parseInt(a.price, 10);
+          } else {
+            return parseInt(a.price, 10) - parseInt(b.price, 10);
+          }
+        });
+      };
+
+      this.getDataSortedByPopularity = (data) => {
+        const catalogData = Object.values(data);
+
+        return catalogData.sort((a, b) => {
+          if (this.sort.flow === `down`) {
+            return b.popularity - a.popularity;
+          } else {
+            return a.popularity - b.popularity;
+          }
+        });
       };
     }
   }
@@ -542,25 +566,102 @@
     }
   });
 
+  // СОРТИРОВКА
   // записываем введенные пользователем параметры сортировки в store
   const sortByPriceButton = document.querySelector(`#sort-by-price`);
   sortByPriceButton.addEventListener(`click`, () => {
     state.setSortType(`by-price`);
+
+    let sortedData = [];
+
+    // проверяем, есть ли уже отфильтрованные данные
+    if (state.getFilteredCatalogData().length > 0) {
+      sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+    } else {
+      sortedData = state.getDataSortedByPrice(state.getCatalogData());
+    }
+
+    // очищаем текущий каталог
+    view.deleteChildrenElements(catalogList);
+
+    // отрисовываем каталог по отфильтрованным данным
+    state.getCatalogDataPerPage(sortedData).forEach((item) => {
+      view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+    });
   });
 
   const sortByPopularityButton = document.querySelector(`#sort-by-popularity`);
   sortByPopularityButton.addEventListener(`click`, () => {
     state.setSortType(`by-popularity`);
+
+    let sortedData = [];
+
+    // проверяем, есть ли уже отфильтрованные данные
+    if (state.getFilteredCatalogData().length > 0) {
+      sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+    } else {
+      sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+    }
+
+    // очищаем текущий каталог
+    view.deleteChildrenElements(catalogList);
+
+    // отрисовываем каталог по отфильтрованным данным
+    state.getCatalogDataPerPage(sortedData).forEach((item) => {
+      view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+    });
   });
 
   const sortFlowUpButton = document.querySelector(`#sort-flow-up`);
   sortFlowUpButton.addEventListener(`click`, () => {
     state.setSortFlow(`up`);
+
+    let sortedData = [];
+
+    // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
+    if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
+      sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+    } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
+      sortedData = state.getDataSortedByPrice(state.getCatalogData());
+    } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
+      sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+    } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
+      sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+    }
+
+    // очищаем текущий каталог
+    view.deleteChildrenElements(catalogList);
+
+    // отрисовываем каталог по отфильтрованным данным
+    state.getCatalogDataPerPage(sortedData).forEach((item) => {
+      view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+    });
   });
 
   const sortFlowDownButton = document.querySelector(`#sort-flow-down`);
   sortFlowDownButton.addEventListener(`click`, () => {
     state.setSortFlow(`down`);
+
+    let sortedData = [];
+
+    // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
+    if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
+      sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+    } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
+      sortedData = state.getDataSortedByPrice(state.getCatalogData());
+    } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
+      sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+    } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
+      sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+    }
+
+    // очищаем текущий каталог
+    view.deleteChildrenElements(catalogList);
+
+    // отрисовываем каталог по отфильтрованным данным
+    state.getCatalogDataPerPage(sortedData).forEach((item) => {
+      view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+    });
   });
 
 }());

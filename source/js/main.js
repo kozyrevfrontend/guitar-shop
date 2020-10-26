@@ -127,23 +127,100 @@ filtersForm.addEventListener(`submit`, (evt) => {
   }
 });
 
+// СОРТИРОВКА
 // записываем введенные пользователем параметры сортировки в store
 const sortByPriceButton = document.querySelector(`#sort-by-price`);
 sortByPriceButton.addEventListener(`click`, () => {
   state.setSortType(`by-price`);
+
+  let sortedData = [];
+
+  // проверяем, есть ли уже отфильтрованные данные
+  if (state.getFilteredCatalogData().length > 0) {
+    sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+  } else {
+    sortedData = state.getDataSortedByPrice(state.getCatalogData());
+  }
+
+  // очищаем текущий каталог
+  view.deleteChildrenElements(catalogList);
+
+  // отрисовываем каталог по отфильтрованным данным
+  state.getCatalogDataPerPage(sortedData).forEach((item) => {
+    view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+  });
 });
 
 const sortByPopularityButton = document.querySelector(`#sort-by-popularity`);
 sortByPopularityButton.addEventListener(`click`, () => {
   state.setSortType(`by-popularity`);
+
+  let sortedData = [];
+
+  // проверяем, есть ли уже отфильтрованные данные
+  if (state.getFilteredCatalogData().length > 0) {
+    sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+  } else {
+    sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+  }
+
+  // очищаем текущий каталог
+  view.deleteChildrenElements(catalogList);
+
+  // отрисовываем каталог по отфильтрованным данным
+  state.getCatalogDataPerPage(sortedData).forEach((item) => {
+    view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+  });
 });
 
 const sortFlowUpButton = document.querySelector(`#sort-flow-up`);
 sortFlowUpButton.addEventListener(`click`, () => {
   state.setSortFlow(`up`);
+
+  let sortedData = [];
+
+  // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
+  if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
+    sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+  } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
+    sortedData = state.getDataSortedByPrice(state.getCatalogData());
+  } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
+    sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+  } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
+    sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+  }
+
+  // очищаем текущий каталог
+  view.deleteChildrenElements(catalogList);
+
+  // отрисовываем каталог по отфильтрованным данным
+  state.getCatalogDataPerPage(sortedData).forEach((item) => {
+    view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+  });
 });
 
 const sortFlowDownButton = document.querySelector(`#sort-flow-down`);
 sortFlowDownButton.addEventListener(`click`, () => {
   state.setSortFlow(`down`);
+
+  let sortedData = [];
+
+  // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
+  if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
+    sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+  } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
+    sortedData = state.getDataSortedByPrice(state.getCatalogData());
+  } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
+    sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+  } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
+    sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+  }
+
+  // очищаем текущий каталог
+  view.deleteChildrenElements(catalogList);
+
+  // отрисовываем каталог по отфильтрованным данным
+  state.getCatalogDataPerPage(sortedData).forEach((item) => {
+    view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+  });
 });
