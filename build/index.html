@@ -104,8 +104,8 @@
                   <label for="electro">Электрогитары</label>
                 </li>
                 <li class="filters__item">
-                  <input class="visually-hidden" id="ukelele" type="checkbox" name="ukelele">
-                  <label for="ukelele">Укулеле</label>
+                  <input class="visually-hidden" id="ukulele" type="checkbox" name="ukulele">
+                  <label for="ukulele">Укулеле</label>
                 </li>
               </ul>
             </fieldset>
@@ -125,7 +125,7 @@
                   <label for="seven-strings">7</label>
                 </li>
                 <li class="filters__item">
-                  <input class="visually-hidden" id="twelve-strings" type="checkbox" name="twelve-strings" disabled="">
+                  <input class="visually-hidden" id="twelve-strings" type="checkbox" name="twelve-strings">
                   <label for="twelve-strings">12</label>
                 </li>
               </ul>
@@ -283,42 +283,6 @@
         </section>
       </div>
     </footer>
-
-    <!--Шаблон карточки товара-->
-    <template id="card-template" style="display: none;">
-      <li class="catalog__item card">
-        <h3 class="card__title"></h3>
-        <span class="card__price"></span>
-        <div class="card__popularity-wrapper">
-          <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-          <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-          <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-          <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-          <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-          <span class="card__popularity"></span>
-        </div>
-        <a class="card__link-more" href="#"><span>Подробнее</span></a>
-        <button class="card__button" type="button">
-          <svg width="12" height="12">
-            <use href="img/sprite_auto.svg#icon-shoping-bag"></use>
-          </svg>
-          <span>Купить</span>
-        </button>
-        <div class="card__image">
-          <picture>
-            <source type="image/webp" srcset="">
-            <img src="" srcset="" alt="" width="68" height="190">
-          </picture>
-        </div>
-      </li>
-    </template>
-
-    <!--Шаблон пагинации-->
-    <template id="pagination-item-template">
-      <li class="pagination__item">
-        <a class="pagination__link" href="#"><span></span></a>
-      </li>
-    </template>
 
     <div class="popup-add">
       <div class="popup-add__overlay">
