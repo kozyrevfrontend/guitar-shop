@@ -36,6 +36,10 @@
     border-color: #585757;
   }
 
+  &--forward {
+    min-width: 80px;
+  }
+
   &:hover,
   &:focus {
     opacity: 0.8;

@@ -9,6 +9,7 @@ state.getCatalogDataPerPage(state.getCatalogData()).forEach((item) => {
 
 // Отрисовываем стартовую пагинацию из расчета всех товаров в каталоге
 const paginationList = document.querySelector(`.pagination__list`);
+
 for (let count = 1; count <= state.getTotalPagesCount(state.getCatalogData()); count++) {
   view.renderPagination(paginationList, view.createPaginationItemTemplate(count));
 }

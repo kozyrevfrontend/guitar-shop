@@ -423,7 +423,7 @@
       this.createPaginationForwardTemplate = () => {
         return (
           `<li class="pagination__item">
-          <a class="pagination__link" href="#"><span>Далее</span></a>
+          <a class="pagination__link pagination__link--forward" href="#"><span>Далее</span></a>
         </li>`
         );
       };
@@ -448,6 +448,7 @@
 
   // Отрисовываем стартовую пагинацию из расчета всех товаров в каталоге
   const paginationList = document.querySelector(`.pagination__list`);
+
   for (let count = 1; count <= state.getTotalPagesCount(state.getCatalogData()); count++) {
     view.renderPagination(paginationList, view.createPaginationItemTemplate(count));
   }
