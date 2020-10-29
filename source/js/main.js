@@ -1,227 +1,235 @@
-import { state } from './components/state';
-import { view } from './components/view';
+import { catalog } from './components/catalog';
+import { State } from './components/state';
+import { View } from './components/view';
+import { Presenter } from './components/presenter';
 
-// Отрисовываем каталог всех товаров
-const catalogList = document.querySelector(`.catalog__list`);
-state.getCatalogDataPerPage(state.getCatalogData()).forEach((item) => {
-  view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-});
+const state = new State(catalog);
+const view = new View();
+const presenter = new Presenter(state, view);
 
-// Отрисовываем стартовую пагинацию из расчета всех товаров в каталоге
-const paginationList = document.querySelector(`.pagination__list`);
+presenter.init();
 
-for (let count = 1; count <= state.getTotalPagesCount(state.getCatalogData()); count++) {
-  view.renderPagination(paginationList, view.createPaginationItemTemplate(count));
-}
+// // Отрисовываем каталог всех товаров
+// const catalogList = document.querySelector(`.catalog__list`);
+// state.getCatalogDataPerPage(state.getCatalogData()).forEach((item) => {
+//   view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+// });
 
-// Если страниц больше одной, отрисовываем кнопку далее
-if (state.getTotalPagesCount(state.getCatalogData()) > 1) {
-  view.renderPaginationForward(paginationList, view.createPaginationForwardTemplate());
-}
+// // Отрисовываем стартовую пагинацию из расчета всех товаров в каталоге
+// const paginationList = document.querySelector(`.pagination__list`);
 
-// На все элементы пагинации вешаем обратотчики события
-const paginationLinks = document.querySelectorAll(`.pagination__link`);
+// for (let count = 1; count <= state.getTotalPagesCount(state.getCatalogData()); count++) {
+//   view.renderPagination(paginationList, view.createPaginationItemTemplate(count));
+// }
 
-const paginationLinkClickHandler = (evt) => {
-  evt.preventDefault();
+// // Если страниц больше одной, отрисовываем кнопку далее
+// if (state.getTotalPagesCount(state.getCatalogData()) > 1) {
+//   view.renderPaginationForward(paginationList, view.createPaginationForwardTemplate());
+// }
 
-  state.setCurrentPage(parseInt(evt.target.textContent, 10));
+// // На все элементы пагинации вешаем обратотчики события
+// const paginationLinks = document.querySelectorAll(`.pagination__link`);
 
-  state.setItemsOffset();
+// const paginationLinkClickHandler = (evt) => {
+//   evt.preventDefault();
 
-  view.deleteChildrenElements(catalogList);
+//   state.setCurrentPage(parseInt(evt.target.textContent, 10));
 
-  state.getCatalogDataPerPage(state.getCatalogData()).forEach((item) => {
-    view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-  });
-};
+//   state.setItemsOffset();
 
-paginationLinks.forEach((link) => {
-  link.addEventListener(`click`, paginationLinkClickHandler);
-});
+//   view.deleteChildrenElements(catalogList);
 
-// Программируем логику работы фильтров
-const filtersForm = document.querySelector(`.filters__form`);
-filtersForm.addEventListener(`submit`, (evt) => {
-  evt.preventDefault();
+//   state.getCatalogDataPerPage(state.getCatalogData()).forEach((item) => {
+//     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+//   });
+// };
 
-  // обнуляем предыдущие значения фильтров
-  state.clearFilters();
+// paginationLinks.forEach((link) => {
+//   link.addEventListener(`click`, paginationLinkClickHandler);
+// });
 
-  const formData = new FormData(evt.target);
+// // Программируем логику работы фильтров
+// const filtersForm = document.querySelector(`.filters__form`);
+// filtersForm.addEventListener(`submit`, (evt) => {
+//   evt.preventDefault();
 
-  // записываем выбранные пользователем значения фильтров в store
-  if (formData.get(`price-min`)) {
-    state.setFiltersPriceMin(formData.get(`price-min`));
-  } else {
-    state.setFiltersPriceMin(`1000`);
-  }
+//   // обнуляем предыдущие значения фильтров
+//   state.clearFilters();
 
-  if (formData.get(`price-max`)) {
-    state.setFiltersPriceMax(formData.get(`price-max`));
-  } else {
-    state.setFiltersPriceMax(`30000`);
-  }
+//   const formData = new FormData(evt.target);
 
-  if (formData.get(`acoustic`)) {
-    state.setFiltersType(`акустическая гитара`);
-  }
+//   // записываем выбранные пользователем значения фильтров в store
+//   if (formData.get(`price-min`)) {
+//     state.setFiltersPriceMin(formData.get(`price-min`));
+//   } else {
+//     state.setFiltersPriceMin(`1000`);
+//   }
 
-  if (formData.get(`electro`)) {
-    state.setFiltersType(`электрогитара`);
-  }
+//   if (formData.get(`price-max`)) {
+//     state.setFiltersPriceMax(formData.get(`price-max`));
+//   } else {
+//     state.setFiltersPriceMax(`30000`);
+//   }
 
-  if (formData.get(`ukulele`)) {
-    state.setFiltersType(`укулеле`);
-  }
+//   if (formData.get(`acoustic`)) {
+//     state.setFiltersType(`акустическая гитара`);
+//   }
 
-  if (!formData.get(`acoustic`) && !formData.get(`electro`) && !formData.get(`ukulele`)) {
-    state.setFiltersType(`акустическая гитара`);
-    state.setFiltersType(`электрогитара`);
-    state.setFiltersType(`укулеле`);
-  }
+//   if (formData.get(`electro`)) {
+//     state.setFiltersType(`электрогитара`);
+//   }
 
-  if (formData.get(`four-strings`)) {
-    state.setFiltersStrings(4);
-  }
+//   if (formData.get(`ukulele`)) {
+//     state.setFiltersType(`укулеле`);
+//   }
 
-  if (formData.get(`six-strings`)) {
-    state.setFiltersStrings(6);
-  }
+//   if (!formData.get(`acoustic`) && !formData.get(`electro`) && !formData.get(`ukulele`)) {
+//     state.setFiltersType(`акустическая гитара`);
+//     state.setFiltersType(`электрогитара`);
+//     state.setFiltersType(`укулеле`);
+//   }
 
-  if (formData.get(`seven-strings`)) {
-    state.setFiltersStrings(7);
-  }
+//   if (formData.get(`four-strings`)) {
+//     state.setFiltersStrings(4);
+//   }
 
-  if (formData.get(`twelve-strings`)) {
-    state.setFiltersStrings(12);
-  }
+//   if (formData.get(`six-strings`)) {
+//     state.setFiltersStrings(6);
+//   }
 
-  if (!formData.get(`four-strings`) && !formData.get(`six-strings`) && !formData.get(`seven-strings`) && !formData.get(`twelve-strings`)) {
-    state.setFiltersStrings(4);
-    state.setFiltersStrings(6);
-    state.setFiltersStrings(7);
-    state.setFiltersStrings(12);
-  }
+//   if (formData.get(`seven-strings`)) {
+//     state.setFiltersStrings(7);
+//   }
 
-  // получаем отфильтрованный массив из каталога
-  const filteredData = state.getFilteredCatalogData();
+//   if (formData.get(`twelve-strings`)) {
+//     state.setFiltersStrings(12);
+//   }
 
-  // очищаем текущий каталог
-  view.deleteChildrenElements(catalogList);
+//   if (!formData.get(`four-strings`) && !formData.get(`six-strings`) && !formData.get(`seven-strings`) && !formData.get(`twelve-strings`)) {
+//     state.setFiltersStrings(4);
+//     state.setFiltersStrings(6);
+//     state.setFiltersStrings(7);
+//     state.setFiltersStrings(12);
+//   }
 
-  // отрисовываем каталог по отфильтрованным данным
-  state.getCatalogDataPerPage(filteredData).forEach((item) => {
-    view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-  });
+//   // получаем отфильтрованный массив из каталога
+//   const filteredData = state.getFilteredCatalogData();
 
-  // очищаем текущую пагинацию
-  view.deleteChildrenElements(paginationList);
+//   // очищаем текущий каталог
+//   view.deleteChildrenElements(catalogList);
 
-  // отрисовываем пагинацию исходя из пересчитанных страниц в каталоге
-  for (let count = 1; count <= state.getTotalPagesCount(filteredData); count++) {
-    view.renderPagination(paginationList, view.createPaginationItemTemplate(count));
-  }
+//   // отрисовываем каталог по отфильтрованным данным
+//   state.getCatalogDataPerPage(filteredData).forEach((item) => {
+//     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+//   });
 
-  if (state.getTotalPagesCount(filteredData) > 1) {
-    view.renderPaginationForward(paginationList, view.createPaginationForwardTemplate());
-  }
-});
+//   // очищаем текущую пагинацию
+//   view.deleteChildrenElements(paginationList);
 
-// СОРТИРОВКА
-// записываем введенные пользователем параметры сортировки в store
-const sortByPriceButton = document.querySelector(`#sort-by-price`);
-sortByPriceButton.addEventListener(`click`, () => {
-  state.setSortType(`by-price`);
+//   // отрисовываем пагинацию исходя из пересчитанных страниц в каталоге
+//   for (let count = 1; count <= state.getTotalPagesCount(filteredData); count++) {
+//     view.renderPagination(paginationList, view.createPaginationItemTemplate(count));
+//   }
 
-  let sortedData = [];
+//   if (state.getTotalPagesCount(filteredData) > 1) {
+//     view.renderPaginationForward(paginationList, view.createPaginationForwardTemplate());
+//   }
+// });
 
-  // проверяем, есть ли уже отфильтрованные данные
-  if (state.getFilteredCatalogData().length > 0) {
-    sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
-  } else {
-    sortedData = state.getDataSortedByPrice(state.getCatalogData());
-  }
+// // СОРТИРОВКА
+// // записываем введенные пользователем параметры сортировки в store
+// const sortByPriceButton = document.querySelector(`#sort-by-price`);
+// sortByPriceButton.addEventListener(`click`, () => {
+//   state.setSortType(`by-price`);
 
-  // очищаем текущий каталог
-  view.deleteChildrenElements(catalogList);
+//   let sortedData = [];
 
-  // отрисовываем каталог по отфильтрованным данным
-  state.getCatalogDataPerPage(sortedData).forEach((item) => {
-    view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-  });
-});
+//   // проверяем, есть ли уже отфильтрованные данные
+//   if (state.getFilteredCatalogData().length > 0) {
+//     sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+//   } else {
+//     sortedData = state.getDataSortedByPrice(state.getCatalogData());
+//   }
 
-const sortByPopularityButton = document.querySelector(`#sort-by-popularity`);
-sortByPopularityButton.addEventListener(`click`, () => {
-  state.setSortType(`by-popularity`);
+//   // очищаем текущий каталог
+//   view.deleteChildrenElements(catalogList);
 
-  let sortedData = [];
+//   // отрисовываем каталог по отфильтрованным данным
+//   state.getCatalogDataPerPage(sortedData).forEach((item) => {
+//     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+//   });
+// });
 
-  // проверяем, есть ли уже отфильтрованные данные
-  if (state.getFilteredCatalogData().length > 0) {
-    sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
-  } else {
-    sortedData = state.getDataSortedByPopularity(state.getCatalogData());
-  }
+// const sortByPopularityButton = document.querySelector(`#sort-by-popularity`);
+// sortByPopularityButton.addEventListener(`click`, () => {
+//   state.setSortType(`by-popularity`);
 
-  // очищаем текущий каталог
-  view.deleteChildrenElements(catalogList);
+//   let sortedData = [];
 
-  // отрисовываем каталог по отфильтрованным данным
-  state.getCatalogDataPerPage(sortedData).forEach((item) => {
-    view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-  });
-});
+//   // проверяем, есть ли уже отфильтрованные данные
+//   if (state.getFilteredCatalogData().length > 0) {
+//     sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+//   } else {
+//     sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+//   }
 
-const sortFlowUpButton = document.querySelector(`#sort-flow-up`);
-sortFlowUpButton.addEventListener(`click`, () => {
-  state.setSortFlow(`up`);
+//   // очищаем текущий каталог
+//   view.deleteChildrenElements(catalogList);
 
-  let sortedData = [];
+//   // отрисовываем каталог по отфильтрованным данным
+//   state.getCatalogDataPerPage(sortedData).forEach((item) => {
+//     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+//   });
+// });
 
-  // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
-  if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
-    sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
-  } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
-    sortedData = state.getDataSortedByPrice(state.getCatalogData());
-  } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
-    sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
-  } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
-    sortedData = state.getDataSortedByPopularity(state.getCatalogData());
-  }
+// const sortFlowUpButton = document.querySelector(`#sort-flow-up`);
+// sortFlowUpButton.addEventListener(`click`, () => {
+//   state.setSortFlow(`up`);
 
-  // очищаем текущий каталог
-  view.deleteChildrenElements(catalogList);
+//   let sortedData = [];
 
-  // отрисовываем каталог по отфильтрованным данным
-  state.getCatalogDataPerPage(sortedData).forEach((item) => {
-    view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-  });
-});
+//   // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
+//   if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
+//     sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+//   } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
+//     sortedData = state.getDataSortedByPrice(state.getCatalogData());
+//   } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
+//     sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+//   } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
+//     sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+//   }
 
-const sortFlowDownButton = document.querySelector(`#sort-flow-down`);
-sortFlowDownButton.addEventListener(`click`, () => {
-  state.setSortFlow(`down`);
+//   // очищаем текущий каталог
+//   view.deleteChildrenElements(catalogList);
 
-  let sortedData = [];
+//   // отрисовываем каталог по отфильтрованным данным
+//   state.getCatalogDataPerPage(sortedData).forEach((item) => {
+//     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+//   });
+// });
 
-  // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
-  if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
-    sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
-  } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
-    sortedData = state.getDataSortedByPrice(state.getCatalogData());
-  } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
-    sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
-  } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
-    sortedData = state.getDataSortedByPopularity(state.getCatalogData());
-  }
+// const sortFlowDownButton = document.querySelector(`#sort-flow-down`);
+// sortFlowDownButton.addEventListener(`click`, () => {
+//   state.setSortFlow(`down`);
 
-  // очищаем текущий каталог
-  view.deleteChildrenElements(catalogList);
+//   let sortedData = [];
 
-  // отрисовываем каталог по отфильтрованным данным
-  state.getCatalogDataPerPage(sortedData).forEach((item) => {
-    view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-  });
-});
+//   // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
+//   if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
+//     sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+//   } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
+//     sortedData = state.getDataSortedByPrice(state.getCatalogData());
+//   } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
+//     sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+//   } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
+//     sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+//   }
+
+//   // очищаем текущий каталог
+//   view.deleteChildrenElements(catalogList);
+
+//   // отрисовываем каталог по отфильтрованным данным
+//   state.getCatalogDataPerPage(sortedData).forEach((item) => {
+//     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+//   });
+// });

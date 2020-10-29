@@ -277,18 +277,38 @@
       this.filters.strings.splice(0, this.filters.strings.length);
     }
 
-    getTotalPagesCount(dataObject) {
+    getTotalPagesCount() {
+      let dataObject = {};
+
+      if (this.getFilteredCatalogData().length > 0) {
+        dataObject = this.getFilteredCatalogData();
+      } else {
+        dataObject = this.getCatalogData();
+      }
+
       const catalogItemsCount = Object.values(dataObject).length;
 
       return Math.ceil(catalogItemsCount / this.catalogItemsPerPage);
     }
 
-    getCatalogDataPerPage(dataObject) {
+    getCatalogDataPerPage() {
+      let dataObject = {};
+
+      if (this.getFilteredCatalogData().length > 0) {
+        dataObject = this.getFilteredCatalogData();
+      } else {
+        dataObject = this.getCatalogData();
+      }
+
       return Object.values(dataObject).slice(this.itemsOffset, this.itemsOffset + this.catalogItemsPerPage);
     }
 
     setCurrentPage(value) {
       this.currentPage = value;
+    }
+
+    getCurrentPage() {
+      return this.currentPage;
     }
 
     setItemsOffset() {
@@ -299,20 +319,11 @@
       return this.catalogData;
     }
 
-    setFiltersPriceMin(value) {
-      this.filters.price.min = value;
-    }
-
-    setFiltersPriceMax(value) {
-      this.filters.price.max = value;
-    }
-
-    setFiltersType(value) {
-      this.filters.type.push(value);
-    }
-
-    setFiltersStrings(value) {
-      this.filters.strings.push(value);
+    setFilters(objectData) {
+      this.filters.price.min = objectData.priceMin;
+      this.filters.price.max = objectData.priceMax;
+      this.filters.type = objectData.type;
+      this.filters.strings = objectData.strings;
     }
 
     getFilteredCatalogData() {
@@ -345,327 +356,510 @@
       this.sort.flow = value;
     }
 
-    getDataSortedByPrice(dataObject) {
+    getSortedData() {
+      let dataObject = {};
+
+      if (this.getFilteredCatalogData().length > 0) {
+        dataObject = this.getFilteredCatalogData();
+      } else {
+        dataObject = this.getCatalogData();
+      }
+
       const catalogData = Object.values(dataObject);
 
       return catalogData.sort((a, b) => {
-        if (this.sort.flow === `down`) {
+        if (this.sort.flow === `down` && this.sort.type === `by-price`) {
           return parseInt(b.price, 10) - parseInt(a.price, 10);
+        } else if (this.sort.flow === `up` && this.sort.type === `by-popularity`) {
+          return a.popularity - b.popularity;
+        } else if (this.sort.flow === `down` && this.sort.type === `by-popularity`) {
+          return b.popularity - a.popularity;
         } else {
           return parseInt(a.price, 10) - parseInt(b.price, 10);
         }
       });
     }
 
-    getDataSortedByPopularity(dataObject) {
-      const catalogData = Object.values(dataObject);
+    // getDataSortedByPrice(dataObject) {
+    //   const catalogData = Object.values(dataObject);
 
-      return catalogData.sort((a, b) => {
-        if (this.sort.flow === `down`) {
-          return b.popularity - a.popularity;
-        } else {
-          return a.popularity - b.popularity;
+    //   return catalogData.sort((a, b) => {
+    //     if (this.sort.flow === `down`) {
+    //       return parseInt(b.price, 10) - parseInt(a.price, 10);
+    //     } else {
+    //       return parseInt(a.price, 10) - parseInt(b.price, 10);
+    //     }
+    //   });
+    // }
+
+    // getDataSortedByPopularity(dataObject) {
+    //   const catalogData = Object.values(dataObject);
+
+    //   return catalogData.sort((a, b) => {
+    //     if (this.sort.flow === `down`) {
+    //       return b.popularity - a.popularity;
+    //     } else {
+    //       return a.popularity - b.popularity;
+    //     }
+    //   });
+    // }
+  }
+
+  class View {
+    createCatalogItemTemplate(card) {
+      return (
+        `<li class="catalog__item card">
+      <h3 class="card__title">${card.model}</h3>
+      <span class="card__price">${card.price} ₽</span>
+      <div class="card__popularity-wrapper">
+        <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
+        <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
+        <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
+        <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
+        <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
+        <span class="card__popularity">${card.popularity}</span>
+      </div>
+      <a class="card__link-more" href="#"><span>Подробнее</span></a>
+      <button class="card__button" type="button">
+        <svg width="12" height="12">
+          <use href="img/sprite_auto.svg#icon-shoping-bag"></use>
+        </svg>
+        <span>Купить</span>
+      </button>
+      <div class="card__image">
+        <picture>
+          <source type="image/webp" srcset="img/${card.image}@1x.webp 1x, img/${card.image}@2x.webp 2x">
+          <img src="img/${card.image}@1x.png" srcset="img/${card.image}@2x.png 2x" alt="${card.model}" width="68" height="190">
+        </picture>
+      </div>
+    </li>`
+      );
+    }
+
+    renderCard(parentElement, template, place = `beforeEnd`) {
+      parentElement.insertAdjacentHTML(place, template);
+    }
+
+    deleteChildrenElements(list) {
+      while (list.firstChild) {
+        list.removeChild(list.firstChild);
+      }
+    }
+
+    renderCatalog(catalogData) {
+      const catalogList = document.querySelector(`.catalog__list`);
+
+      this.deleteChildrenElements(catalogList);
+
+      catalogData.forEach((item) => {
+        this.renderCard(catalogList, this.createCatalogItemTemplate(item));
+      });
+    }
+
+    createPaginationItemTemplate(count) {
+      return (
+        `<li class="pagination__item">
+        <a class="pagination__link" href="#"><span>${count}</span></a>
+      </li>`
+      );
+    }
+
+    createPaginationForwardTemplate() {
+      return (
+        `<li class="pagination__item">
+        <a class="pagination__link pagination__link--forward" href="#"><span>Далее</span></a>
+      </li>`
+      );
+    }
+
+    renderPaginationItem(parentElement, template, place = `beforeEnd`) {
+      parentElement.insertAdjacentHTML(place, template);
+    }
+
+    renderPaginationForward(parentElement, template, place = `beforeEnd`) {
+      parentElement.insertAdjacentHTML(place, template);
+    }
+
+    renderPaginationList(totalPages, clickHandler, currentPage) {
+      const paginationList = document.querySelector(`.pagination__list`);
+
+      this.deleteChildrenElements(paginationList);
+
+      for (let count = 1; count <= totalPages; count++) {
+        this.renderPaginationItem(paginationList, this.createPaginationItemTemplate(count));
+      }
+
+      if (totalPages > 1) {
+        this.renderPaginationForward(paginationList, this.createPaginationForwardTemplate());
+      }
+
+      const paginationLinks = paginationList.querySelectorAll(`.pagination__link:not(.pagination__link--forward)`);
+
+      const handler = (node) => {
+        node.addEventListener(`click`, (evt) => {
+          evt.preventDefault();
+
+          const page = parseInt(evt.target.textContent, 10);
+
+          clickHandler(page);
+        });
+      };
+
+      paginationLinks.forEach((link) => {
+        handler(link);
+
+        if (parseInt(link.textContent, 10) === currentPage) {
+          link.classList.add(`pagination__link--current`);
         }
+      });
+    }
+
+    setFiltersFormSettings(submitHandler) {
+      const filtersForm = document.querySelector(`.filters__form`);
+
+      filtersForm.addEventListener(`submit`, (evt) => {
+        evt.preventDefault();
+
+        const formData = new FormData(filtersForm);
+
+        let filterValues = {
+          priceMin: ``,
+          priceMax: ``,
+          type: [],
+          strings: []
+        };
+
+        if (formData.get(`price-min`)) {
+          filterValues.priceMin = formData.get(`price-min`);
+        } else {
+          filterValues.priceMin = `1000`;
+        }
+
+        if (formData.get(`price-max`)) {
+          filterValues.priceMax = formData.get(`price-max`);
+        } else {
+          filterValues.priceMax = `30000`;
+        }
+
+        if (formData.get(`acoustic`)) {
+          filterValues.type.push(`акустическая гитара`);
+        }
+
+        if (formData.get(`electro`)) {
+          filterValues.type.push(`электрогитара`);
+        }
+
+        if (formData.get(`ukulele`)) {
+          filterValues.type.push(`укулеле`);
+        }
+
+        if (!formData.get(`acoustic`) && !formData.get(`electro`) && !formData.get(`ukulele`)) {
+          filterValues.type = [`акустическая гитара`, `электрогитара`, `укулеле`];
+        }
+
+        if (formData.get(`four-strings`)) {
+          filterValues.strings.push(4);
+        }
+
+        if (formData.get(`six-strings`)) {
+          filterValues.strings.push(6);
+        }
+
+        if (formData.get(`seven-strings`)) {
+          filterValues.strings.push(7);
+        }
+
+        if (formData.get(`twelve-strings`)) {
+          filterValues.strings.push(12);
+        }
+
+        if (!formData.get(`four-strings`) && !formData.get(`six-strings`) && !formData.get(`seven-strings`) && !formData.get(`twelve-strings`)) {
+          filterValues.strings = [4, 6, 7, 12];
+        }
+
+        submitHandler(filterValues);
       });
     }
   }
 
+  class Presenter {
+    constructor(myState, myView) {
+      this.state = myState;
+      this.view = myView;
+
+      this.paginationLinkClickHandler = this.paginationLinkClickHandler.bind(this);
+      this.filtersFormSubmitHandler = this.filtersFormSubmitHandler.bind(this);
+    }
+
+    init() {
+      this.renderCatalogPage();
+    }
+
+    renderCatalogPage() {
+      this.view.renderCatalog(this.state.getCatalogDataPerPage());
+
+      this.renderPaginationList();
+
+      this.setFiltersFormSettings();
+    }
+
+    renderPaginationList() {
+      this.view.renderPaginationList(this.state.getTotalPagesCount(), this.paginationLinkClickHandler, this.state.getCurrentPage());
+    }
+
+    setFiltersFormSettings() {
+      this.view.setFiltersFormSettings(this.filtersFormSubmitHandler);
+    }
+
+    paginationLinkClickHandler(page) {
+      this.state.setCurrentPage(page);
+
+      this.state.setItemsOffset();
+
+      this.view.renderCatalog(this.state.getCatalogDataPerPage());
+
+      this.renderPaginationList();
+    }
+
+    filtersFormSubmitHandler(values) {
+      this.state.setFilters(values);
+
+      this.view.renderCatalog(this.state.getCatalogDataPerPage());
+
+      this.renderPaginationList();
+    }
+  }
+
   const state = new State(catalog);
-
-  class View {
-    constructor() {
-      this.createCatalogItemTemplate = (card) => {
-        return (
-          `<li class="catalog__item card">
-        <h3 class="card__title">${card.model}</h3>
-        <span class="card__price">${card.price} ₽</span>
-        <div class="card__popularity-wrapper">
-          <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-          <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-          <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-          <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-          <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
-          <span class="card__popularity">${card.popularity}</span>
-        </div>
-        <a class="card__link-more" href="#"><span>Подробнее</span></a>
-        <button class="card__button" type="button">
-          <svg width="12" height="12">
-            <use href="img/sprite_auto.svg#icon-shoping-bag"></use>
-          </svg>
-          <span>Купить</span>
-        </button>
-        <div class="card__image">
-          <picture>
-            <source type="image/webp" srcset="img/${card.image}@1x.webp 1x, img/${card.image}@2x.webp 2x">
-            <img src="img/${card.image}@1x.png" srcset="img/${card.image}@2x.png 2x" alt="${card.model}" width="68" height="190">
-          </picture>
-        </div>
-      </li>`
-        );
-      };
-
-      this.renderCard = (parentElement, template, place = `beforeEnd`) => {
-        parentElement.insertAdjacentHTML(place, template);
-      };
-
-      this.deleteChildrenElements = (list) => {
-        while (list.firstChild) {
-          list.removeChild(list.firstChild);
-        }
-      };
-
-      this.createPaginationItemTemplate = (count) => {
-        return (
-          `<li class="pagination__item">
-          <a class="pagination__link" href="#"><span>${count}</span></a>
-        </li>`
-        );
-      };
-
-      this.createPaginationForwardTemplate = () => {
-        return (
-          `<li class="pagination__item">
-          <a class="pagination__link pagination__link--forward" href="#"><span>Далее</span></a>
-        </li>`
-        );
-      };
-
-      this.renderPagination = (parentElement, template, place = `beforeEnd`) => {
-        parentElement.insertAdjacentHTML(place, template);
-      };
-
-      this.renderPaginationForward = (parentElement, template, place = `beforeEnd`) => {
-        parentElement.insertAdjacentHTML(place, template);
-      };
-    }
-  }
-
   const view = new View();
+  const presenter = new Presenter(state, view);
 
-  // Отрисовываем каталог всех товаров
-  const catalogList = document.querySelector(`.catalog__list`);
-  state.getCatalogDataPerPage(state.getCatalogData()).forEach((item) => {
-    view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-  });
+  presenter.init();
 
-  // Отрисовываем стартовую пагинацию из расчета всех товаров в каталоге
-  const paginationList = document.querySelector(`.pagination__list`);
+  // // Отрисовываем каталог всех товаров
+  // const catalogList = document.querySelector(`.catalog__list`);
+  // state.getCatalogDataPerPage(state.getCatalogData()).forEach((item) => {
+  //   view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+  // });
 
-  for (let count = 1; count <= state.getTotalPagesCount(state.getCatalogData()); count++) {
-    view.renderPagination(paginationList, view.createPaginationItemTemplate(count));
-  }
+  // // Отрисовываем стартовую пагинацию из расчета всех товаров в каталоге
+  // const paginationList = document.querySelector(`.pagination__list`);
 
-  // Если страниц больше одной, отрисовываем кнопку далее
-  if (state.getTotalPagesCount(state.getCatalogData()) > 1) {
-    view.renderPaginationForward(paginationList, view.createPaginationForwardTemplate());
-  }
+  // for (let count = 1; count <= state.getTotalPagesCount(state.getCatalogData()); count++) {
+  //   view.renderPagination(paginationList, view.createPaginationItemTemplate(count));
+  // }
 
-  // На все элементы пагинации вешаем обратотчики события
-  const paginationLinks = document.querySelectorAll(`.pagination__link`);
+  // // Если страниц больше одной, отрисовываем кнопку далее
+  // if (state.getTotalPagesCount(state.getCatalogData()) > 1) {
+  //   view.renderPaginationForward(paginationList, view.createPaginationForwardTemplate());
+  // }
 
-  const paginationLinkClickHandler = (evt) => {
-    evt.preventDefault();
+  // // На все элементы пагинации вешаем обратотчики события
+  // const paginationLinks = document.querySelectorAll(`.pagination__link`);
 
-    state.setCurrentPage(parseInt(evt.target.textContent, 10));
+  // const paginationLinkClickHandler = (evt) => {
+  //   evt.preventDefault();
 
-    state.setItemsOffset();
+  //   state.setCurrentPage(parseInt(evt.target.textContent, 10));
 
-    view.deleteChildrenElements(catalogList);
+  //   state.setItemsOffset();
 
-    state.getCatalogDataPerPage(state.getCatalogData()).forEach((item) => {
-      view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-    });
-  };
+  //   view.deleteChildrenElements(catalogList);
 
-  paginationLinks.forEach((link) => {
-    link.addEventListener(`click`, paginationLinkClickHandler);
-  });
+  //   state.getCatalogDataPerPage(state.getCatalogData()).forEach((item) => {
+  //     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+  //   });
+  // };
 
-  // Программируем логику работы фильтров
-  const filtersForm = document.querySelector(`.filters__form`);
-  filtersForm.addEventListener(`submit`, (evt) => {
-    evt.preventDefault();
+  // paginationLinks.forEach((link) => {
+  //   link.addEventListener(`click`, paginationLinkClickHandler);
+  // });
 
-    // обнуляем предыдущие значения фильтров
-    state.clearFilters();
+  // // Программируем логику работы фильтров
+  // const filtersForm = document.querySelector(`.filters__form`);
+  // filtersForm.addEventListener(`submit`, (evt) => {
+  //   evt.preventDefault();
 
-    const formData = new FormData(evt.target);
+  //   // обнуляем предыдущие значения фильтров
+  //   state.clearFilters();
 
-    // записываем выбранные пользователем значения фильтров в store
-    if (formData.get(`price-min`)) {
-      state.setFiltersPriceMin(formData.get(`price-min`));
-    } else {
-      state.setFiltersPriceMin(`1000`);
-    }
+  //   const formData = new FormData(evt.target);
 
-    if (formData.get(`price-max`)) {
-      state.setFiltersPriceMax(formData.get(`price-max`));
-    } else {
-      state.setFiltersPriceMax(`30000`);
-    }
+  //   // записываем выбранные пользователем значения фильтров в store
+  //   if (formData.get(`price-min`)) {
+  //     state.setFiltersPriceMin(formData.get(`price-min`));
+  //   } else {
+  //     state.setFiltersPriceMin(`1000`);
+  //   }
 
-    if (formData.get(`acoustic`)) {
-      state.setFiltersType(`акустическая гитара`);
-    }
+  //   if (formData.get(`price-max`)) {
+  //     state.setFiltersPriceMax(formData.get(`price-max`));
+  //   } else {
+  //     state.setFiltersPriceMax(`30000`);
+  //   }
 
-    if (formData.get(`electro`)) {
-      state.setFiltersType(`электрогитара`);
-    }
+  //   if (formData.get(`acoustic`)) {
+  //     state.setFiltersType(`акустическая гитара`);
+  //   }
 
-    if (formData.get(`ukulele`)) {
-      state.setFiltersType(`укулеле`);
-    }
+  //   if (formData.get(`electro`)) {
+  //     state.setFiltersType(`электрогитара`);
+  //   }
 
-    if (!formData.get(`acoustic`) && !formData.get(`electro`) && !formData.get(`ukulele`)) {
-      state.setFiltersType(`акустическая гитара`);
-      state.setFiltersType(`электрогитара`);
-      state.setFiltersType(`укулеле`);
-    }
+  //   if (formData.get(`ukulele`)) {
+  //     state.setFiltersType(`укулеле`);
+  //   }
 
-    if (formData.get(`four-strings`)) {
-      state.setFiltersStrings(4);
-    }
+  //   if (!formData.get(`acoustic`) && !formData.get(`electro`) && !formData.get(`ukulele`)) {
+  //     state.setFiltersType(`акустическая гитара`);
+  //     state.setFiltersType(`электрогитара`);
+  //     state.setFiltersType(`укулеле`);
+  //   }
 
-    if (formData.get(`six-strings`)) {
-      state.setFiltersStrings(6);
-    }
+  //   if (formData.get(`four-strings`)) {
+  //     state.setFiltersStrings(4);
+  //   }
 
-    if (formData.get(`seven-strings`)) {
-      state.setFiltersStrings(7);
-    }
+  //   if (formData.get(`six-strings`)) {
+  //     state.setFiltersStrings(6);
+  //   }
 
-    if (formData.get(`twelve-strings`)) {
-      state.setFiltersStrings(12);
-    }
+  //   if (formData.get(`seven-strings`)) {
+  //     state.setFiltersStrings(7);
+  //   }
 
-    if (!formData.get(`four-strings`) && !formData.get(`six-strings`) && !formData.get(`seven-strings`) && !formData.get(`twelve-strings`)) {
-      state.setFiltersStrings(4);
-      state.setFiltersStrings(6);
-      state.setFiltersStrings(7);
-      state.setFiltersStrings(12);
-    }
+  //   if (formData.get(`twelve-strings`)) {
+  //     state.setFiltersStrings(12);
+  //   }
 
-    // получаем отфильтрованный массив из каталога
-    const filteredData = state.getFilteredCatalogData();
+  //   if (!formData.get(`four-strings`) && !formData.get(`six-strings`) && !formData.get(`seven-strings`) && !formData.get(`twelve-strings`)) {
+  //     state.setFiltersStrings(4);
+  //     state.setFiltersStrings(6);
+  //     state.setFiltersStrings(7);
+  //     state.setFiltersStrings(12);
+  //   }
 
-    // очищаем текущий каталог
-    view.deleteChildrenElements(catalogList);
+  //   // получаем отфильтрованный массив из каталога
+  //   const filteredData = state.getFilteredCatalogData();
 
-    // отрисовываем каталог по отфильтрованным данным
-    state.getCatalogDataPerPage(filteredData).forEach((item) => {
-      view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-    });
+  //   // очищаем текущий каталог
+  //   view.deleteChildrenElements(catalogList);
 
-    // очищаем текущую пагинацию
-    view.deleteChildrenElements(paginationList);
+  //   // отрисовываем каталог по отфильтрованным данным
+  //   state.getCatalogDataPerPage(filteredData).forEach((item) => {
+  //     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+  //   });
 
-    // отрисовываем пагинацию исходя из пересчитанных страниц в каталоге
-    for (let count = 1; count <= state.getTotalPagesCount(filteredData); count++) {
-      view.renderPagination(paginationList, view.createPaginationItemTemplate(count));
-    }
+  //   // очищаем текущую пагинацию
+  //   view.deleteChildrenElements(paginationList);
 
-    if (state.getTotalPagesCount(filteredData) > 1) {
-      view.renderPaginationForward(paginationList, view.createPaginationForwardTemplate());
-    }
-  });
+  //   // отрисовываем пагинацию исходя из пересчитанных страниц в каталоге
+  //   for (let count = 1; count <= state.getTotalPagesCount(filteredData); count++) {
+  //     view.renderPagination(paginationList, view.createPaginationItemTemplate(count));
+  //   }
 
-  // СОРТИРОВКА
-  // записываем введенные пользователем параметры сортировки в store
-  const sortByPriceButton = document.querySelector(`#sort-by-price`);
-  sortByPriceButton.addEventListener(`click`, () => {
-    state.setSortType(`by-price`);
+  //   if (state.getTotalPagesCount(filteredData) > 1) {
+  //     view.renderPaginationForward(paginationList, view.createPaginationForwardTemplate());
+  //   }
+  // });
 
-    let sortedData = [];
+  // // СОРТИРОВКА
+  // // записываем введенные пользователем параметры сортировки в store
+  // const sortByPriceButton = document.querySelector(`#sort-by-price`);
+  // sortByPriceButton.addEventListener(`click`, () => {
+  //   state.setSortType(`by-price`);
 
-    // проверяем, есть ли уже отфильтрованные данные
-    if (state.getFilteredCatalogData().length > 0) {
-      sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
-    } else {
-      sortedData = state.getDataSortedByPrice(state.getCatalogData());
-    }
+  //   let sortedData = [];
 
-    // очищаем текущий каталог
-    view.deleteChildrenElements(catalogList);
+  //   // проверяем, есть ли уже отфильтрованные данные
+  //   if (state.getFilteredCatalogData().length > 0) {
+  //     sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+  //   } else {
+  //     sortedData = state.getDataSortedByPrice(state.getCatalogData());
+  //   }
 
-    // отрисовываем каталог по отфильтрованным данным
-    state.getCatalogDataPerPage(sortedData).forEach((item) => {
-      view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-    });
-  });
+  //   // очищаем текущий каталог
+  //   view.deleteChildrenElements(catalogList);
 
-  const sortByPopularityButton = document.querySelector(`#sort-by-popularity`);
-  sortByPopularityButton.addEventListener(`click`, () => {
-    state.setSortType(`by-popularity`);
+  //   // отрисовываем каталог по отфильтрованным данным
+  //   state.getCatalogDataPerPage(sortedData).forEach((item) => {
+  //     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+  //   });
+  // });
 
-    let sortedData = [];
+  // const sortByPopularityButton = document.querySelector(`#sort-by-popularity`);
+  // sortByPopularityButton.addEventListener(`click`, () => {
+  //   state.setSortType(`by-popularity`);
 
-    // проверяем, есть ли уже отфильтрованные данные
-    if (state.getFilteredCatalogData().length > 0) {
-      sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
-    } else {
-      sortedData = state.getDataSortedByPopularity(state.getCatalogData());
-    }
+  //   let sortedData = [];
 
-    // очищаем текущий каталог
-    view.deleteChildrenElements(catalogList);
+  //   // проверяем, есть ли уже отфильтрованные данные
+  //   if (state.getFilteredCatalogData().length > 0) {
+  //     sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+  //   } else {
+  //     sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+  //   }
 
-    // отрисовываем каталог по отфильтрованным данным
-    state.getCatalogDataPerPage(sortedData).forEach((item) => {
-      view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-    });
-  });
+  //   // очищаем текущий каталог
+  //   view.deleteChildrenElements(catalogList);
 
-  const sortFlowUpButton = document.querySelector(`#sort-flow-up`);
-  sortFlowUpButton.addEventListener(`click`, () => {
-    state.setSortFlow(`up`);
+  //   // отрисовываем каталог по отфильтрованным данным
+  //   state.getCatalogDataPerPage(sortedData).forEach((item) => {
+  //     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+  //   });
+  // });
 
-    let sortedData = [];
+  // const sortFlowUpButton = document.querySelector(`#sort-flow-up`);
+  // sortFlowUpButton.addEventListener(`click`, () => {
+  //   state.setSortFlow(`up`);
 
-    // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
-    if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
-      sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
-    } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
-      sortedData = state.getDataSortedByPrice(state.getCatalogData());
-    } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
-      sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
-    } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
-      sortedData = state.getDataSortedByPopularity(state.getCatalogData());
-    }
+  //   let sortedData = [];
 
-    // очищаем текущий каталог
-    view.deleteChildrenElements(catalogList);
+  //   // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
+  //   if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
+  //     sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+  //   } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
+  //     sortedData = state.getDataSortedByPrice(state.getCatalogData());
+  //   } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
+  //     sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+  //   } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
+  //     sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+  //   }
 
-    // отрисовываем каталог по отфильтрованным данным
-    state.getCatalogDataPerPage(sortedData).forEach((item) => {
-      view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-    });
-  });
+  //   // очищаем текущий каталог
+  //   view.deleteChildrenElements(catalogList);
 
-  const sortFlowDownButton = document.querySelector(`#sort-flow-down`);
-  sortFlowDownButton.addEventListener(`click`, () => {
-    state.setSortFlow(`down`);
+  //   // отрисовываем каталог по отфильтрованным данным
+  //   state.getCatalogDataPerPage(sortedData).forEach((item) => {
+  //     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+  //   });
+  // });
 
-    let sortedData = [];
+  // const sortFlowDownButton = document.querySelector(`#sort-flow-down`);
+  // sortFlowDownButton.addEventListener(`click`, () => {
+  //   state.setSortFlow(`down`);
 
-    // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
-    if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
-      sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
-    } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
-      sortedData = state.getDataSortedByPrice(state.getCatalogData());
-    } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
-      sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
-    } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
-      sortedData = state.getDataSortedByPopularity(state.getCatalogData());
-    }
+  //   let sortedData = [];
 
-    // очищаем текущий каталог
-    view.deleteChildrenElements(catalogList);
+  //   // проверяем, есть ли уже отфильтрованные данные, проверяем тип сортировки
+  //   if (state.sort.type === `by-price` && state.getFilteredCatalogData().length > 0) {
+  //     sortedData = state.getDataSortedByPrice(state.getFilteredCatalogData());
+  //   } else if (state.sort.type === `by-price` && state.getFilteredCatalogData().length === 0) {
+  //     sortedData = state.getDataSortedByPrice(state.getCatalogData());
+  //   } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length > 0) {
+  //     sortedData = state.getDataSortedByPopularity(state.getFilteredCatalogData());
+  //   } else if (state.sort.type === `by-popularity` && state.getFilteredCatalogData().length === 0) {
+  //     sortedData = state.getDataSortedByPopularity(state.getCatalogData());
+  //   }
 
-    // отрисовываем каталог по отфильтрованным данным
-    state.getCatalogDataPerPage(sortedData).forEach((item) => {
-      view.renderCard(catalogList, view.createCatalogItemTemplate(item));
-    });
-  });
+  //   // очищаем текущий каталог
+  //   view.deleteChildrenElements(catalogList);
+
+  //   // отрисовываем каталог по отфильтрованным данным
+  //   state.getCatalogDataPerPage(sortedData).forEach((item) => {
+  //     view.renderCard(catalogList, view.createCatalogItemTemplate(item));
+  //   });
+  // });
 
 }());
 
