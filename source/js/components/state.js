@@ -144,28 +144,4 @@ export class State {
       }
     });
   }
-
-  // getDataSortedByPrice(dataObject) {
-  //   const catalogData = Object.values(dataObject);
-
-  //   return catalogData.sort((a, b) => {
-  //     if (this.sort.flow === `down`) {
-  //       return parseInt(b.price, 10) - parseInt(a.price, 10);
-  //     } else {
-  //       return parseInt(a.price, 10) - parseInt(b.price, 10);
-  //     }
-  //   });
-  // }
-
-  // getDataSortedByPopularity(dataObject) {
-  //   const catalogData = Object.values(dataObject);
-
-  //   return catalogData.sort((a, b) => {
-  //     if (this.sort.flow === `down`) {
-  //       return b.popularity - a.popularity;
-  //     } else {
-  //       return a.popularity - b.popularity;
-  //     }
-  //   });
-  // }
 }
