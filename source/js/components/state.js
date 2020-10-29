@@ -31,7 +31,9 @@ export class State {
   getTotalPagesCount() {
     let dataObject = {};
 
-    if (this.getFilteredCatalogData().length > 0) {
+    if (this.getSortedData().length > 0) {
+      dataObject = this.getSortedData();
+    } else if (this.getFilteredCatalogData().length > 0) {
       dataObject = this.getFilteredCatalogData();
     } else {
       dataObject = this.getCatalogData();
@@ -45,7 +47,9 @@ export class State {
   getCatalogDataPerPage() {
     let dataObject = {};
 
-    if (this.getFilteredCatalogData().length > 0) {
+    if (this.getSortedData().length > 0) {
+      dataObject = this.getSortedData();
+    } else if (this.getFilteredCatalogData().length > 0) {
       dataObject = this.getFilteredCatalogData();
     } else {
       dataObject = this.getCatalogData();
@@ -125,8 +129,18 @@ export class State {
         return a.popularity - b.popularity;
       } else if (this.sort.flow === `down` && this.sort.type === `by-popularity`) {
         return b.popularity - a.popularity;
-      } else {
+      } else if (this.sort.flow === `up` && this.sort.type === `by-price`) {
         return parseInt(a.price, 10) - parseInt(b.price, 10);
+      } else if (this.sort.flow === `up` && this.sort.type === ``) {
+        return parseInt(a.price, 10) - parseInt(b.price, 10);
+      } else if (this.sort.flow === `down` && this.sort.type === ``) {
+        return parseInt(b.price, 10) - parseInt(a.price, 10);
+      } else if (this.sort.flow === `` && this.sort.type === `by-price`) {
+        return parseInt(a.price, 10) - parseInt(b.price, 10);
+      } else if (this.sort.flow === `` && this.sort.type === `by-popularity`) {
+        return a.popularity - b.popularity;
+      } else {
+        return catalogData;
       }
     });
   }

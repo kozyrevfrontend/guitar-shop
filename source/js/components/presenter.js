@@ -5,6 +5,8 @@ export class Presenter {
 
     this.paginationLinkClickHandler = this.paginationLinkClickHandler.bind(this);
     this.filtersFormSubmitHandler = this.filtersFormSubmitHandler.bind(this);
+    this.sortByTypeHandler = this.sortByTypeHandler.bind(this);
+    this.sortByFlowHandler = this.sortByFlowHandler.bind(this);
   }
 
   init() {
@@ -17,6 +19,8 @@ export class Presenter {
     this.renderPaginationList();
 
     this.setFiltersFormSettings();
+
+    this.setSortSettings();
   }
 
   renderPaginationList() {
@@ -25,6 +29,10 @@ export class Presenter {
 
   setFiltersFormSettings() {
     this.view.setFiltersFormSettings(this.filtersFormSubmitHandler);
+  }
+
+  setSortSettings() {
+    this.view.setSortSettings(this.sortByTypeHandler, this.sortByFlowHandler);
   }
 
   paginationLinkClickHandler(page) {
@@ -50,8 +58,27 @@ export class Presenter {
 
     // перерисовываем пагинацию
     this.renderPaginationList();
+  }
 
-    console.dir(this.state.filters);
-    console.dir(this.state.getFilteredCatalogData());
+  sortByTypeHandler(type) {
+    // обновляем значение типа сортировки в state
+    this.state.setSortType(type);
+
+    // перерисовываем каталог
+    this.view.renderCatalog(this.state.getCatalogDataPerPage());
+
+    // перерисовываем пагинацию
+    this.renderPaginationList();
+  }
+
+  sortByFlowHandler(flow) {
+    // обновляем значение направления сортировки в state
+    this.state.setSortFlow(flow);
+
+    // перерисовываем каталог
+    this.view.renderCatalog(this.state.getCatalogDataPerPage());
+
+    // перерисовываем пагинацию
+    this.renderPaginationList();
   }
 }

@@ -20,31 +20,35 @@
 
   display: flex;
   flex-wrap: wrap;
+}
 
-  button {
-    display: block;
-    padding: 0;
+.sort__options-button {
+  display: block;
+  padding: 0;
 
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 20px;
-    letter-spacing: 0.05em;
-    color: #585757;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0.05em;
+  color: #585757;
 
-    border: none;
+  border: none;
 
-    background-color: transparent;
+  background-color: transparent;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    &:hover,
-    &:focus {
-      color: #000000;
-    }
+  &--current {
+    color: #000000;
+  }
 
-    &:active {
-      opacity: 0.8;
-    }
+  &:hover,
+  &:focus {
+    color: #000000;
+  }
+
+  &:active {
+    opacity: 0.8;
   }
 }
 
@@ -64,26 +68,30 @@
   width: 58px;
   margin-left: auto;
   margin-right: 8px;
+}
 
-  button {
-    display: block;
-    padding: 0;
+.sort__view-button {
+  display: block;
+  padding: 0;
 
-    color: #6c6c6c;
+  color: #6c6c6c;
 
-    border: none;
+  border: none;
 
-    background-color: transparent;
+  background-color: transparent;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    &:hover,
-    &:focus {
-      color: #000000;
-    }
+  &--current {
+    color: #000000;
+  }
 
-    &:active {
-      opacity: 0.8;
-    }
+  &:hover,
+  &:focus {
+    color: #000000;
+  }
+
+  &:active {
+    opacity: 0.8;
   }
 }

@@ -280,7 +280,9 @@
     getTotalPagesCount() {
       let dataObject = {};
 
-      if (this.getFilteredCatalogData().length > 0) {
+      if (this.getSortedData().length > 0) {
+        dataObject = this.getSortedData();
+      } else if (this.getFilteredCatalogData().length > 0) {
         dataObject = this.getFilteredCatalogData();
       } else {
         dataObject = this.getCatalogData();
@@ -294,7 +296,9 @@
     getCatalogDataPerPage() {
       let dataObject = {};
 
-      if (this.getFilteredCatalogData().length > 0) {
+      if (this.getSortedData().length > 0) {
+        dataObject = this.getSortedData();
+      } else if (this.getFilteredCatalogData().length > 0) {
         dataObject = this.getFilteredCatalogData();
       } else {
         dataObject = this.getCatalogData();
@@ -374,8 +378,18 @@
           return a.popularity - b.popularity;
         } else if (this.sort.flow === `down` && this.sort.type === `by-popularity`) {
           return b.popularity - a.popularity;
-        } else {
+        } else if (this.sort.flow === `up` && this.sort.type === `by-price`) {
           return parseInt(a.price, 10) - parseInt(b.price, 10);
+        } else if (this.sort.flow === `up` && this.sort.type === ``) {
+          return parseInt(a.price, 10) - parseInt(b.price, 10);
+        } else if (this.sort.flow === `down` && this.sort.type === ``) {
+          return parseInt(b.price, 10) - parseInt(a.price, 10);
+        } else if (this.sort.flow === `` && this.sort.type === `by-price`) {
+          return parseInt(a.price, 10) - parseInt(b.price, 10);
+        } else if (this.sort.flow === `` && this.sort.type === `by-popularity`) {
+          return a.popularity - b.popularity;
+        } else {
+          return catalogData;
         }
       });
     }
@@ -645,6 +659,63 @@
         submitHandler(filterValues);
       });
     }
+
+    setSortSettings(sortTypeHandler, sortFlowHandler) {
+      const sortByTypeButtons = document.querySelectorAll(`.sort__options-button`);
+      const sortByFlowButtons = document.querySelectorAll(`.sort__view-button`);
+      const sortByPriceButton = document.querySelector(`#by-price`);
+      const sortByPopularityButton = document.querySelector(`#by-popularity`);
+      const sortFlowUpButton = document.querySelector(`#up`);
+      const sortFlowDownButton = document.querySelector(`#down`);
+
+      sortByPriceButton.addEventListener(`click`, (evt) => {
+        const sortType = evt.currentTarget.id;
+
+        sortByTypeButtons.forEach((button) => {
+          button.classList.remove(`sort__options-button--current`);
+        });
+
+        evt.currentTarget.classList.add(`sort__options-button--current`);
+
+        sortTypeHandler(sortType);
+      });
+
+      sortByPopularityButton.addEventListener(`click`, (evt) => {
+        const sortType = evt.currentTarget.id;
+
+        sortByTypeButtons.forEach((button) => {
+          button.classList.remove(`sort__options-button--current`);
+        });
+
+        evt.currentTarget.classList.add(`sort__options-button--current`);
+
+        sortTypeHandler(sortType);
+      });
+
+      sortFlowUpButton.addEventListener(`click`, (evt) => {
+        const sortFlow = evt.currentTarget.id;
+
+        sortByFlowButtons.forEach((button) => {
+          button.classList.remove(`sort__view-button--current`);
+        });
+
+        evt.currentTarget.classList.add(`sort__view-button--current`);
+
+        sortFlowHandler(sortFlow);
+      });
+
+      sortFlowDownButton.addEventListener(`click`, (evt) => {
+        const sortFlow = evt.currentTarget.id;
+
+        sortByFlowButtons.forEach((button) => {
+          button.classList.remove(`sort__view-button--current`);
+        });
+
+        evt.currentTarget.classList.add(`sort__view-button--current`);
+
+        sortFlowHandler(sortFlow);
+      });
+    }
   }
 
   class Presenter {
@@ -654,6 +725,8 @@
 
       this.paginationLinkClickHandler = this.paginationLinkClickHandler.bind(this);
       this.filtersFormSubmitHandler = this.filtersFormSubmitHandler.bind(this);
+      this.sortByTypeHandler = this.sortByTypeHandler.bind(this);
+      this.sortByFlowHandler = this.sortByFlowHandler.bind(this);
     }
 
     init() {
@@ -666,6 +739,8 @@
       this.renderPaginationList();
 
       this.setFiltersFormSettings();
+
+      this.setSortSettings();
     }
 
     renderPaginationList() {
@@ -674,6 +749,10 @@
 
     setFiltersFormSettings() {
       this.view.setFiltersFormSettings(this.filtersFormSubmitHandler);
+    }
+
+    setSortSettings() {
+      this.view.setSortSettings(this.sortByTypeHandler, this.sortByFlowHandler);
     }
 
     paginationLinkClickHandler(page) {
@@ -699,9 +778,28 @@
 
       // перерисовываем пагинацию
       this.renderPaginationList();
+    }
 
-      console.dir(this.state.filters);
-      console.dir(this.state.getFilteredCatalogData());
+    sortByTypeHandler(type) {
+      // обновляем значение типа сортировки в state
+      this.state.setSortType(type);
+
+      // перерисовываем каталог
+      this.view.renderCatalog(this.state.getCatalogDataPerPage());
+
+      // перерисовываем пагинацию
+      this.renderPaginationList();
+    }
+
+    sortByFlowHandler(flow) {
+      // обновляем значение направления сортировки в state
+      this.state.setSortFlow(flow);
+
+      // перерисовываем каталог
+      this.view.renderCatalog(this.state.getCatalogDataPerPage());
+
+      // перерисовываем пагинацию
+      this.renderPaginationList();
     }
   }
 
