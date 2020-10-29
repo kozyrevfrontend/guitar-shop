@@ -516,6 +516,38 @@
 
     setFiltersFormSettings(submitHandler) {
       const filtersForm = document.querySelector(`.filters__form`);
+      const acousticCheckbox = filtersForm.querySelector(`#acoustic`);
+      const electroCheckbox = filtersForm.querySelector(`#electro`);
+      const ukuleleCheckbox = filtersForm.querySelector(`#ukulele`);
+      const fourStringsCheckbox = filtersForm.querySelector(`#four-strings`);
+      const sixStringsCheckbox = filtersForm.querySelector(`#six-strings`);
+      const sevenStringsCheckbox = filtersForm.querySelector(`#seven-strings`);
+      const twelveStringsCheckbox = filtersForm.querySelector(`#twelve-strings`);
+
+      const checkCheckboxState = () => {
+        if (acousticCheckbox.checked && !electroCheckbox.checked && !ukuleleCheckbox.checked) {
+          fourStringsCheckbox.setAttribute(`disabled`, `disabled`);
+        } else if (!acousticCheckbox.checked && electroCheckbox.checked && !ukuleleCheckbox.checked) {
+          twelveStringsCheckbox.setAttribute(`disabled`, `disabled`);
+        } else if (!acousticCheckbox.checked && !electroCheckbox.checked && ukuleleCheckbox.checked) {
+          sixStringsCheckbox.setAttribute(`disabled`, `disabled`);
+          sevenStringsCheckbox.setAttribute(`disabled`, `disabled`);
+          twelveStringsCheckbox.setAttribute(`disabled`, `disabled`);
+        } else if (!acousticCheckbox.checked && electroCheckbox.checked && ukuleleCheckbox.checked) {
+          twelveStringsCheckbox.setAttribute(`disabled`, `disabled`);
+          sixStringsCheckbox.removeAttribute(`disabled`);
+          sevenStringsCheckbox.removeAttribute(`disabled`);
+        } else {
+          fourStringsCheckbox.removeAttribute(`disabled`);
+          sixStringsCheckbox.removeAttribute(`disabled`);
+          sevenStringsCheckbox.removeAttribute(`disabled`);
+          twelveStringsCheckbox.removeAttribute(`disabled`);
+        }
+      };
+
+      acousticCheckbox.addEventListener(`change`, checkCheckboxState);
+      electroCheckbox.addEventListener(`change`, checkCheckboxState);
+      ukuleleCheckbox.addEventListener(`change`, checkCheckboxState);
 
       filtersForm.addEventListener(`submit`, (evt) => {
         evt.preventDefault();
