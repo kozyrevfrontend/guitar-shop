@@ -109,6 +109,8 @@ export class View {
 
   setFiltersFormSettings(submitHandler) {
     const filtersForm = document.querySelector(`.filters__form`);
+    const priceMin = filtersForm.querySelector(`#price-min`);
+    const priceMax = filtersForm.querySelector(`#price-max`);
     const acousticCheckbox = filtersForm.querySelector(`#acoustic`);
     const electroCheckbox = filtersForm.querySelector(`#electro`);
     const ukuleleCheckbox = filtersForm.querySelector(`#ukulele`);
@@ -117,6 +119,36 @@ export class View {
     const sevenStringsCheckbox = filtersForm.querySelector(`#seven-strings`);
     const twelveStringsCheckbox = filtersForm.querySelector(`#twelve-strings`);
 
+    const comparePriceValues = (evt) => {
+      if (isNaN(evt.target.value * 0)) {
+        evt.target.setCustomValidity(`Пожалуйста, введите число больше 0`);
+        evt.target.value = ``;
+      } else if (parseInt(evt.target.value, 10) < 0) {
+        evt.target.setCustomValidity(`Цена товара не может быть меньше 0`);
+        evt.target.value = ``;
+      } else if (parseInt(priceMin.value, 10) === parseInt(priceMax.value, 10)) {
+        evt.target.setCustomValidity(`Минимальная и максимальная цены товара должны отличаться`);
+        evt.target.value = ``;
+      } else {
+        evt.target.setCustomValidity(``);
+      }
+
+      if (parseInt(priceMin.value, 10) > parseInt(priceMax.value, 10)) {
+        const temp = priceMax.value;
+        priceMax.value = priceMin.value;
+        priceMin.value = temp;
+      }
+    };
+
+    priceMin.addEventListener(`change`, (priceMinEvt) => {
+      comparePriceValues(priceMinEvt);
+    });
+
+    priceMax.addEventListener(`change`, (priceMaxEvt) => {
+      comparePriceValues(priceMaxEvt);
+    });
+
+    // Блокируем чекбоксы в зависимости от выбранных типов гитар
     const checkCheckboxState = () => {
       if (acousticCheckbox.checked && !electroCheckbox.checked && !ukuleleCheckbox.checked) {
         fourStringsCheckbox.setAttribute(`disabled`, `disabled`);
@@ -141,6 +173,7 @@ export class View {
     acousticCheckbox.addEventListener(`change`, checkCheckboxState);
     electroCheckbox.addEventListener(`change`, checkCheckboxState);
     ukuleleCheckbox.addEventListener(`change`, checkCheckboxState);
+    // ----------
 
     filtersForm.addEventListener(`submit`, (evt) => {
       evt.preventDefault();

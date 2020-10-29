@@ -50,5 +50,8 @@ export class Presenter {
 
     // перерисовываем пагинацию
     this.renderPaginationList();
+
+    console.dir(this.state.filters);
+    console.dir(this.state.getFilteredCatalogData());
   }
 }
