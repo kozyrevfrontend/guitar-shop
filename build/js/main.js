@@ -612,20 +612,27 @@
     }
 
     paginationLinkClickHandler(page) {
+      // обновляем текущую страницу в state
       this.state.setCurrentPage(page);
 
+      // обновляем смещение элементов каталога в state
       this.state.setItemsOffset();
 
+      // перерисовываем каталог
       this.view.renderCatalog(this.state.getCatalogDataPerPage());
 
+      // перерисовываем пагинацию
       this.renderPaginationList();
     }
 
     filtersFormSubmitHandler(values) {
+      // обновляем значения фильтров в state
       this.state.setFilters(values);
 
+      // перерисовываем каталог
       this.view.renderCatalog(this.state.getCatalogDataPerPage());
 
+      // перерисовываем пагинацию
       this.renderPaginationList();
     }
   }
