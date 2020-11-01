@@ -29,29 +29,13 @@ export class State {
   }
 
   getTotalPagesCount() {
-    let dataObject = {};
-
-    if (this.getSortedData().length > 0) {
-      dataObject = this.getSortedData();
-    } else {
-      dataObject = this.getFilteredCatalogData();
-    }
-
-    const catalogItemsCount = Object.values(dataObject).length;
+    const catalogItemsCount = Object.values(this.getSortedData()).length;
 
     return Math.ceil(catalogItemsCount / this.catalogItemsPerPage);
   }
 
   getCatalogDataPerPage() {
-    let dataObject = {};
-
-    if (this.getSortedData().length > 0) {
-      dataObject = this.getSortedData();
-    } else {
-      dataObject = this.getFilteredCatalogData();
-    }
-
-    return Object.values(dataObject).slice(this.itemsOffset, this.itemsOffset + this.catalogItemsPerPage);
+    return Object.values(this.getSortedData()).slice(this.itemsOffset, this.itemsOffset + this.catalogItemsPerPage);
   }
 
   setCurrentPage(value) {
@@ -116,9 +100,7 @@ export class State {
   }
 
   getSortedData() {
-    let dataObject = this.getFilteredCatalogData();
-
-    const catalogData = Object.values(dataObject);
+    const catalogData = Object.values(this.getFilteredCatalogData());
 
     return catalogData.sort((a, b) => {
       if (this.sort.flow === `down` && this.sort.type === `by-price`) {
