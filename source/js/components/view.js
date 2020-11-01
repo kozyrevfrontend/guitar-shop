@@ -119,7 +119,14 @@ export class View {
     const sevenStringsCheckbox = filtersForm.querySelector(`#seven-strings`);
     const twelveStringsCheckbox = filtersForm.querySelector(`#twelve-strings`);
 
-    const comparePriceValues = () => {
+    const comparePriceValues = (evt) => {
+      if (parseInt(evt.target.value, 10) < 0) {
+        evt.target.setCustomValidity(`Цена товара не может быть меньше 0`);
+        evt.target.value = ``;
+      } else {
+        evt.target.setCustomValidity(``);
+      }
+
       if (parseInt(priceMin.value, 10) > parseInt(priceMax.value, 10)) {
         const temp = priceMax.value;
         priceMax.value = priceMin.value;
@@ -127,12 +134,12 @@ export class View {
       }
     };
 
-    priceMin.addEventListener(`change`, () => {
-      comparePriceValues();
+    priceMin.addEventListener(`change`, (priceMinEvt) => {
+      comparePriceValues(priceMinEvt);
     });
 
-    priceMax.addEventListener(`change`, () => {
-      comparePriceValues();
+    priceMax.addEventListener(`change`, (priceMaxEvt) => {
+      comparePriceValues(priceMaxEvt);
     });
 
     // Блокируем чекбоксы в зависимости от выбранных типов гитар
