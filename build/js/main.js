@@ -586,14 +586,10 @@
 
         if (formData.get(`price-min`)) {
           filterValues.priceMin = parseInt(formData.get(`price-min`), 10);
-        } else {
-          filterValues.priceMin = 1000;
         }
 
         if (formData.get(`price-max`)) {
           filterValues.priceMax = parseInt(formData.get(`price-max`), 10);
-        } else {
-          filterValues.priceMax = 30000;
         }
 
         if (formData.get(`acoustic`)) {
