@@ -33,10 +33,8 @@ export class State {
 
     if (this.getSortedData().length > 0) {
       dataObject = this.getSortedData();
-    } else if (this.getFilteredCatalogData().length > 0) {
-      dataObject = this.getFilteredCatalogData();
     } else {
-      dataObject = this.getCatalogData();
+      dataObject = this.getFilteredCatalogData();
     }
 
     const catalogItemsCount = Object.values(dataObject).length;
@@ -49,10 +47,8 @@ export class State {
 
     if (this.getSortedData().length > 0) {
       dataObject = this.getSortedData();
-    } else if (this.getFilteredCatalogData().length > 0) {
-      dataObject = this.getFilteredCatalogData();
     } else {
-      dataObject = this.getCatalogData();
+      dataObject = this.getFilteredCatalogData();
     }
 
     return Object.values(dataObject).slice(this.itemsOffset, this.itemsOffset + this.catalogItemsPerPage);
@@ -84,16 +80,24 @@ export class State {
   getFilteredCatalogData() {
     const currentData = Object.values(this.catalogData);
 
+    if (this.filters.price.min === null && this.filters.price.max === null && this.filters.type.length === 0 && this.filters.strings.length === 0) {
+      return currentData;
+    }
+
     const filteredData = currentData.filter((item) => {
-      if (item.price < this.filters.price.min || item.price > this.filters.price.max) {
+      if (this.filters.price.min && item.price < this.filters.price.min) {
         return false;
       }
 
-      if (!this.filters.type.includes(item.type)) {
+      if (this.filters.price.max && item.price > this.filters.price.max) {
         return false;
       }
 
-      if (!this.filters.strings.includes(item.stringsNumber)) {
+      if (this.filters.type.length > 0 && !this.filters.type.includes(item.type)) {
+        return false;
+      }
+
+      if (this.filters.strings.length > 0 && !this.filters.strings.includes(item.stringsNumber)) {
         return false;
       }
 
