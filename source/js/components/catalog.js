@@ -5,7 +5,7 @@ export const catalog = {
     type: `электрогитара`,
     popularity: 15,
     stringsNumber: 7,
-    price: `17500`,
+    price: 17500,
     image: `card-electro1`
   },
   TK129049: {
@@ -14,7 +14,7 @@ export const catalog = {
     type: `электрогитара`,
     popularity: 9,
     stringsNumber: 7,
-    price: `29500`,
+    price: 29500,
     image: `card-electro2`
   },
   RO111111: {
@@ -23,7 +23,7 @@ export const catalog = {
     type: `укулеле`,
     popularity: 21,
     stringsNumber: 4,
-    price: `6800`,
+    price: 6800,
     image: `card-ukulele1`
   },
   TK436457: {
@@ -32,7 +32,7 @@ export const catalog = {
     type: `электрогитара`,
     popularity: 15,
     stringsNumber: 6,
-    price: `30000`,
+    price: 30000,
     image: `card-electro3`
   },
   DI192138: {
@@ -41,7 +41,7 @@ export const catalog = {
     type: `акустическая гитара`,
     popularity: 5,
     stringsNumber: 7,
-    price: `3500`,
+    price: 3500,
     image: `card-ukulele2`
   },
   SO934345: {
@@ -50,7 +50,7 @@ export const catalog = {
     type: `электрогитара`,
     popularity: 17,
     stringsNumber: 6,
-    price: `15300`,
+    price: 15300,
     image: `card-electro1`
   },
   DI082347: {
@@ -59,7 +59,7 @@ export const catalog = {
     type: `укулеле`,
     popularity: 5,
     stringsNumber: 4,
-    price: `2200`,
+    price: 2200,
     image: `card-ukulele1`
   },
   SO135646: {
@@ -68,7 +68,7 @@ export const catalog = {
     type: `электрогитара`,
     popularity: 27,
     stringsNumber: 4,
-    price: `30000`,
+    price: 30000,
     image: `card-electro4`
   },
   VO154751: {
@@ -77,7 +77,7 @@ export const catalog = {
     type: `акустическая гитара`,
     popularity: 3,
     stringsNumber: 7,
-    price: `1700`,
+    price: 1700,
     image: `card-ukulele2`
   },
   TK244556: {
@@ -86,7 +86,7 @@ export const catalog = {
     type: `электрогитара`,
     popularity: 20,
     stringsNumber: 4,
-    price: `23000`,
+    price: 23000,
     image: `card-electro2`
   },
   TK134663: {
@@ -95,7 +95,7 @@ export const catalog = {
     type: `электрогитара`,
     popularity: 19,
     stringsNumber: 4,
-    price: `18700`,
+    price: 18700,
     image: `card-electro1`
   },
   SO123212: {
@@ -104,7 +104,7 @@ export const catalog = {
     type: `электрогитара`,
     popularity: 30,
     stringsNumber: 7,
-    price: `35000`,
+    price: 35000,
     image: `card-electro3`
   },
   SO123234: {
@@ -113,7 +113,7 @@ export const catalog = {
     type: `электрогитара`,
     popularity: 28,
     stringsNumber: 6,
-    price: `14900`,
+    price: 14900,
     image: `card-electro4`
   },
   VO519510: {
@@ -122,7 +122,7 @@ export const catalog = {
     type: `акустическая гитара`,
     popularity: 7,
     stringsNumber: 6,
-    price: `7600`,
+    price: 7600,
     image: `card-ukulele2`
   },
   VO457369: {
@@ -131,7 +131,7 @@ export const catalog = {
     type: `акустическая гитара`,
     popularity: 19,
     stringsNumber: 6,
-    price: `6500`,
+    price: 6500,
     image: `card-ukulele2`
   },
   FB625903: {
@@ -140,7 +140,7 @@ export const catalog = {
     type: `акустическая гитара`,
     popularity: 26,
     stringsNumber: 7,
-    price: `12000`,
+    price: 12000,
     image: `card-ukulele2`
   },
   FB576948: {
@@ -149,7 +149,7 @@ export const catalog = {
     type: `акустическая гитара`,
     popularity: 31,
     stringsNumber: 7,
-    price: `9900`,
+    price: 9900,
     image: `card-ukulele2`
   },
   LU012032: {
@@ -158,7 +158,7 @@ export const catalog = {
     type: `акустическая гитара`,
     popularity: 28,
     stringsNumber: 12,
-    price: `8900`,
+    price: 8900,
     image: `card-ukulele2`
   },
   LU546853: {
@@ -167,7 +167,7 @@ export const catalog = {
     type: `акустическая гитара`,
     popularity: 34,
     stringsNumber: 12,
-    price: `10500`,
+    price: 10500,
     image: `card-ukulele2`
   },
   LU458283: {
@@ -176,7 +176,7 @@ export const catalog = {
     type: `акустическая гитара`,
     popularity: 9,
     stringsNumber: 6,
-    price: `13300`,
+    price: 13300,
     image: `card-ukulele2`
   },
   RO324341: {
@@ -185,7 +185,7 @@ export const catalog = {
     type: `укулеле`,
     popularity: 37,
     stringsNumber: 4,
-    price: `4800`,
+    price: 4800,
     image: `card-ukulele1`
   },
   RO214235: {
@@ -194,7 +194,7 @@ export const catalog = {
     type: `укулеле`,
     popularity: 5,
     stringsNumber: 4,
-    price: `1900`,
+    price: 1900,
     image: `card-ukulele1`
   },
   DI132414: {
@@ -203,7 +203,7 @@ export const catalog = {
     type: `укулеле`,
     popularity: 23,
     stringsNumber: 4,
-    price: `2500`,
+    price: 2500,
     image: `card-ukulele1`
   },
   DI934754: {
@@ -212,7 +212,7 @@ export const catalog = {
     type: `укулеле`,
     popularity: 3,
     stringsNumber: 4,
-    price: `3800`,
+    price: 3800,
     image: `card-ukulele1`
   },
   DI034292: {
@@ -221,7 +221,7 @@ export const catalog = {
     type: `укулеле`,
     popularity: 10,
     stringsNumber: 4,
-    price: `4100`,
+    price: 4100,
     image: `card-ukulele1`
   },
   MI193214: {
@@ -230,7 +230,7 @@ export const catalog = {
     type: `укулеле`,
     popularity: 14,
     stringsNumber: 4,
-    price: `2700`,
+    price: 2700,
     image: `card-ukulele1`
   },
   VO043244: {
@@ -239,7 +239,7 @@ export const catalog = {
     type: `укулеле`,
     popularity: 29,
     stringsNumber: 4,
-    price: `6700`,
+    price: 6700,
     image: `card-ukulele1`
   }
 };

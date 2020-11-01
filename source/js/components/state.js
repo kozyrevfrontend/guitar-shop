@@ -4,8 +4,8 @@ export class State {
 
     this.filters = {
       price: {
-        min: `1000`,
-        max: `30000`
+        min: null,
+        max: null
       },
       type: [],
       strings: []
