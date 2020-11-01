@@ -85,7 +85,7 @@ export class State {
     const currentData = Object.values(this.catalogData);
 
     const filteredData = currentData.filter((item) => {
-      if (parseInt(item.price, 10) < parseInt(this.filters.price.min, 10) || parseInt(item.price, 10) > parseInt(this.filters.price.max, 10)) {
+      if (item.price < this.filters.price.min || item.price > this.filters.price.max) {
         return false;
       }
 

@@ -334,7 +334,7 @@
       const currentData = Object.values(this.catalogData);
 
       const filteredData = currentData.filter((item) => {
-        if (parseInt(item.price, 10) < parseInt(this.filters.price.min, 10) || parseInt(item.price, 10) > parseInt(this.filters.price.max, 10)) {
+        if (item.price < this.filters.price.min || item.price > this.filters.price.max) {
           return false;
         }
 
@@ -604,10 +604,6 @@
           filterValues.type.push(`укулеле`);
         }
 
-        if (!formData.get(`acoustic`) && !formData.get(`electro`) && !formData.get(`ukulele`)) {
-          filterValues.type = [`акустическая гитара`, `электрогитара`, `укулеле`];
-        }
-
         if (formData.get(`four-strings`)) {
           filterValues.strings.push(4);
         }
@@ -622,10 +618,6 @@
 
         if (formData.get(`twelve-strings`)) {
           filterValues.strings.push(12);
-        }
-
-        if (!formData.get(`four-strings`) && !formData.get(`six-strings`) && !formData.get(`seven-strings`) && !formData.get(`twelve-strings`)) {
-          filterValues.strings = [4, 6, 7, 12];
         }
 
         submitHandler(filterValues);
