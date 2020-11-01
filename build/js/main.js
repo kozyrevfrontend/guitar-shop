@@ -365,13 +365,7 @@
     }
 
     getSortedData() {
-      let dataObject = {};
-
-      if (this.getFilteredCatalogData().length > 0) {
-        dataObject = this.getFilteredCatalogData();
-      } else {
-        dataObject = this.getCatalogData();
-      }
+      let dataObject = this.getFilteredCatalogData();
 
       const catalogData = Object.values(dataObject);
 
@@ -520,20 +514,7 @@
       const sevenStringsCheckbox = filtersForm.querySelector(`#seven-strings`);
       const twelveStringsCheckbox = filtersForm.querySelector(`#twelve-strings`);
 
-      const comparePriceValues = (evt) => {
-        if (isNaN(evt.target.value * 0)) {
-          evt.target.setCustomValidity(`Пожалуйста, введите число больше 0`);
-          evt.target.value = ``;
-        } else if (parseInt(evt.target.value, 10) < 0) {
-          evt.target.setCustomValidity(`Цена товара не может быть меньше 0`);
-          evt.target.value = ``;
-        } else if (parseInt(priceMin.value, 10) === parseInt(priceMax.value, 10)) {
-          evt.target.setCustomValidity(`Минимальная и максимальная цены товара должны отличаться`);
-          evt.target.value = ``;
-        } else {
-          evt.target.setCustomValidity(``);
-        }
-
+      const comparePriceValues = () => {
         if (parseInt(priceMin.value, 10) > parseInt(priceMax.value, 10)) {
           const temp = priceMax.value;
           priceMax.value = priceMin.value;
@@ -541,12 +522,12 @@
         }
       };
 
-      priceMin.addEventListener(`change`, (priceMinEvt) => {
-        comparePriceValues(priceMinEvt);
+      priceMin.addEventListener(`change`, () => {
+        comparePriceValues();
       });
 
-      priceMax.addEventListener(`change`, (priceMaxEvt) => {
-        comparePriceValues(priceMaxEvt);
+      priceMax.addEventListener(`change`, () => {
+        comparePriceValues();
       });
 
       // Блокируем чекбоксы в зависимости от выбранных типов гитар

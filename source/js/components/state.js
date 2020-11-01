@@ -116,13 +116,7 @@ export class State {
   }
 
   getSortedData() {
-    let dataObject = {};
-
-    if (this.getFilteredCatalogData().length > 0) {
-      dataObject = this.getFilteredCatalogData();
-    } else {
-      dataObject = this.getCatalogData();
-    }
+    let dataObject = this.getFilteredCatalogData();
 
     const catalogData = Object.values(dataObject);
 
