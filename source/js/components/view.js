@@ -234,7 +234,7 @@ export class View {
     parentElement.insertAdjacentHTML(place, template);
   }
 
-  renderPaginationList(totalPages, clickHandler, currentPage) {
+  renderPaginationList(totalPages, clickHandler, currentPage, forwardClickHandler) {
     const paginationList = document.querySelector(`.pagination__list`);
 
     this.deleteChildrenElements(paginationList);
@@ -245,6 +245,14 @@ export class View {
 
     if (totalPages > 1) {
       this.renderPaginationForward(paginationList, this.createPaginationForwardTemplate());
+
+      const paginationForward = paginationList.querySelector(`.pagination__link--forward`);
+
+      paginationForward.addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+
+        forwardClickHandler();
+      });
     }
 
     const paginationLinks = paginationList.querySelectorAll(`.pagination__link:not(.pagination__link--forward)`);

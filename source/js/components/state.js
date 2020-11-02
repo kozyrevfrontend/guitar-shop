@@ -55,6 +55,12 @@ export class State {
     this.currentPage = value;
   }
 
+  setNextPage() {
+    if (this.currentPage < this.getTotalPagesCount()) {
+      this.currentPage++;
+    }
+  }
+
   getCurrentPage() {
     return this.currentPage;
   }

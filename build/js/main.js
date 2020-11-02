@@ -304,6 +304,12 @@
       this.currentPage = value;
     }
 
+    setNextPage() {
+      if (this.currentPage < this.getTotalPagesCount()) {
+        this.currentPage++;
+      }
+    }
+
     getCurrentPage() {
       return this.currentPage;
     }
@@ -624,7 +630,7 @@
       parentElement.insertAdjacentHTML(place, template);
     }
 
-    renderPaginationList(totalPages, clickHandler, currentPage) {
+    renderPaginationList(totalPages, clickHandler, currentPage, forwardClickHandler) {
       const paginationList = document.querySelector(`.pagination__list`);
 
       this.deleteChildrenElements(paginationList);
@@ -635,6 +641,14 @@
 
       if (totalPages > 1) {
         this.renderPaginationForward(paginationList, this.createPaginationForwardTemplate());
+
+        const paginationForward = paginationList.querySelector(`.pagination__link--forward`);
+
+        paginationForward.addEventListener(`click`, (evt) => {
+          evt.preventDefault();
+
+          forwardClickHandler();
+        });
       }
 
       const paginationLinks = paginationList.querySelectorAll(`.pagination__link:not(.pagination__link--forward)`);
@@ -841,6 +855,7 @@
       this.sortByFlowHandler = this.sortByFlowHandler.bind(this);
       this.cardButtonClickHandler = this.cardButtonClickHandler.bind(this);
       this.popupAddButtonClickHandler = this.popupAddButtonClickHandler.bind(this);
+      this.paginationLinkForwardClickHandler = this.paginationLinkForwardClickHandler.bind(this);
     }
 
     init() {
@@ -864,7 +879,7 @@
     }
 
     renderPaginationList() {
-      this.view.renderPaginationList(this.state.getTotalPagesCount(), this.paginationLinkClickHandler, this.state.getCurrentPage());
+      this.view.renderPaginationList(this.state.getTotalPagesCount(), this.paginationLinkClickHandler, this.state.getCurrentPage(), this.paginationLinkForwardClickHandler);
     }
 
     setFiltersFormSettings() {
@@ -893,6 +908,20 @@
     paginationLinkClickHandler(page) {
       // обновляем текущую страницу в state
       this.state.setCurrentPage(page);
+
+      // обновляем смещение элементов каталога в state
+      this.state.setItemsOffset();
+
+      // перерисовываем каталог
+      this.renderCatalog();
+
+      // перерисовываем пагинацию
+      this.renderPaginationList();
+    }
+
+    paginationLinkForwardClickHandler() {
+      // обновляем текущую страницу в state
+      this.state.setNextPage();
 
       // обновляем смещение элементов каталога в state
       this.state.setItemsOffset();

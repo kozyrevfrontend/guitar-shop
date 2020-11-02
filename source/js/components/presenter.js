@@ -9,6 +9,7 @@ export class Presenter {
     this.sortByFlowHandler = this.sortByFlowHandler.bind(this);
     this.cardButtonClickHandler = this.cardButtonClickHandler.bind(this);
     this.popupAddButtonClickHandler = this.popupAddButtonClickHandler.bind(this);
+    this.paginationLinkForwardClickHandler = this.paginationLinkForwardClickHandler.bind(this);
   }
 
   init() {
@@ -32,7 +33,7 @@ export class Presenter {
   }
 
   renderPaginationList() {
-    this.view.renderPaginationList(this.state.getTotalPagesCount(), this.paginationLinkClickHandler, this.state.getCurrentPage());
+    this.view.renderPaginationList(this.state.getTotalPagesCount(), this.paginationLinkClickHandler, this.state.getCurrentPage(), this.paginationLinkForwardClickHandler);
   }
 
   setFiltersFormSettings() {
@@ -61,6 +62,20 @@ export class Presenter {
   paginationLinkClickHandler(page) {
     // обновляем текущую страницу в state
     this.state.setCurrentPage(page);
+
+    // обновляем смещение элементов каталога в state
+    this.state.setItemsOffset();
+
+    // перерисовываем каталог
+    this.renderCatalog();
+
+    // перерисовываем пагинацию
+    this.renderPaginationList();
+  }
+
+  paginationLinkForwardClickHandler() {
+    // обновляем текущую страницу в state
+    this.state.setNextPage();
 
     // обновляем смещение элементов каталога в state
     this.state.setItemsOffset();
