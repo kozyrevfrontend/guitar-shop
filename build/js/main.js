@@ -425,7 +425,7 @@
       );
     }
 
-    renderCard(parentElement, template, place = `beforeEnd`) {
+    renderElement(parentElement, template, place = `beforeEnd`) {
       parentElement.insertAdjacentHTML(place, template);
     }
 
@@ -438,25 +438,27 @@
     renderCatalog(catalogData, clickHandler) {
       const catalogList = document.querySelector(`.catalog__list`);
 
-      this.deleteChildrenElements(catalogList);
+      if (catalogList) {
+        this.deleteChildrenElements(catalogList);
 
-      catalogData.forEach((item) => {
-        this.renderCard(catalogList, this.createCatalogItemTemplate(item));
-      });
-
-      const cardButtons = catalogList.querySelectorAll(`.card__button`);
-
-      const handler = (node) => {
-        node.addEventListener(`click`, (evt) => {
-          evt.preventDefault();
-
-          clickHandler(evt.currentTarget.dataset.id);
+        catalogData.forEach((item) => {
+          this.renderElement(catalogList, this.createCatalogItemTemplate(item));
         });
-      };
 
-      cardButtons.forEach((button) => {
-        handler(button);
-      });
+        const cardButtons = catalogList.querySelectorAll(`.card__button`);
+
+        const handler = (node) => {
+          node.addEventListener(`click`, (evt) => {
+            evt.preventDefault();
+
+            clickHandler(evt.currentTarget.dataset.id);
+          });
+        };
+
+        cardButtons.forEach((button) => {
+          handler(button);
+        });
+      }
     }
 
     createAddPopupTemplate(card) {
@@ -490,7 +492,7 @@
     }
 
     renderAddPopup(card, addButtonClickHandler) {
-      this.renderCard(document.body, this.createAddPopupTemplate(card));
+      this.renderElement(document.body, this.createAddPopupTemplate(card));
 
       const popup = document.querySelector(`.popup-add`);
       const closeButton = popup.querySelector(`.popup-add__add-close`);
@@ -534,7 +536,7 @@
     renderShoppingCartValue(value) {
       const shoppingCartLink = document.querySelector(`.user-menu__link--basket`);
 
-      this.renderCard(shoppingCartLink, this.createShoppingCartValueTemplate(value));
+      this.renderElement(shoppingCartLink, this.createShoppingCartValueTemplate(value));
     }
 
     removeShoppingCartValue() {
@@ -551,7 +553,7 @@
           <div class="popup-success__body">
             <p class="popup-success__title">Товар успешно добавлен в корзину</p>
             <div class="popup-success__wrapper">
-              <a class="popup-success__open-bag" href="#"><span>Перейти в корзину</span></a>
+              <a class="popup-success__open-bag" href="cart.html"><span>Перейти в корзину</span></a>
               <button class="popup-success__continue">Продолжить покупки</button>
               <button class="popup-success__close" aria-label="Закрыть попап">
                 <svg width="18" height="18">
@@ -566,7 +568,7 @@
     }
 
     renderSuccessPopup() {
-      this.renderCard(document.body, this.createSuccessPopupTemplate());
+      this.renderElement(document.body, this.createSuccessPopupTemplate());
 
       const popup = document.querySelector(`.popup-success`);
       const closeButton = popup.querySelector(`.popup-success__close`);
@@ -622,10 +624,6 @@
       );
     }
 
-    renderPaginationItem(parentElement, template, place = `beforeEnd`) {
-      parentElement.insertAdjacentHTML(place, template);
-    }
-
     renderPaginationForward(parentElement, template, place = `beforeEnd`) {
       parentElement.insertAdjacentHTML(place, template);
     }
@@ -633,214 +631,223 @@
     renderPaginationList(totalPages, clickHandler, currentPage, forwardClickHandler) {
       const paginationList = document.querySelector(`.pagination__list`);
 
-      this.deleteChildrenElements(paginationList);
+      if (paginationList) {
+        this.deleteChildrenElements(paginationList);
 
-      for (let count = 1; count <= totalPages; count++) {
-        this.renderPaginationItem(paginationList, this.createPaginationItemTemplate(count));
-      }
-
-      if (totalPages > 1) {
-        this.renderPaginationForward(paginationList, this.createPaginationForwardTemplate());
-
-        const paginationForward = paginationList.querySelector(`.pagination__link--forward`);
-
-        paginationForward.addEventListener(`click`, (evt) => {
-          evt.preventDefault();
-
-          forwardClickHandler();
-        });
-      }
-
-      const paginationLinks = paginationList.querySelectorAll(`.pagination__link:not(.pagination__link--forward)`);
-
-      const handler = (node) => {
-        node.addEventListener(`click`, (evt) => {
-          evt.preventDefault();
-
-          const page = parseInt(evt.target.textContent, 10);
-
-          clickHandler(page);
-        });
-      };
-
-      paginationLinks.forEach((link) => {
-        handler(link);
-
-        if (parseInt(link.textContent, 10) === currentPage) {
-          link.classList.add(`pagination__link--current`);
+        for (let count = 1; count <= totalPages; count++) {
+          this.renderElement(paginationList, this.createPaginationItemTemplate(count));
         }
-      });
+
+        if (totalPages > 1) {
+          this.renderPaginationForward(paginationList, this.createPaginationForwardTemplate());
+
+          const paginationForward = paginationList.querySelector(`.pagination__link--forward`);
+
+          paginationForward.addEventListener(`click`, (evt) => {
+            evt.preventDefault();
+
+            forwardClickHandler();
+          });
+        }
+
+        const paginationLinks = paginationList.querySelectorAll(`.pagination__link:not(.pagination__link--forward)`);
+
+        const handler = (node) => {
+          node.addEventListener(`click`, (evt) => {
+            evt.preventDefault();
+
+            const page = parseInt(evt.target.textContent, 10);
+
+            clickHandler(page);
+          });
+        };
+
+        paginationLinks.forEach((link) => {
+          handler(link);
+
+          if (parseInt(link.textContent, 10) === currentPage) {
+            link.classList.add(`pagination__link--current`);
+          }
+        });
+      }
     }
 
     setFiltersFormSettings(submitHandler) {
       const filtersForm = document.querySelector(`.filters__form`);
-      const priceMin = filtersForm.querySelector(`#price-min`);
-      const priceMax = filtersForm.querySelector(`#price-max`);
-      const acousticCheckbox = filtersForm.querySelector(`#acoustic`);
-      const electroCheckbox = filtersForm.querySelector(`#electro`);
-      const ukuleleCheckbox = filtersForm.querySelector(`#ukulele`);
-      const fourStringsCheckbox = filtersForm.querySelector(`#four-strings`);
-      const sixStringsCheckbox = filtersForm.querySelector(`#six-strings`);
-      const sevenStringsCheckbox = filtersForm.querySelector(`#seven-strings`);
-      const twelveStringsCheckbox = filtersForm.querySelector(`#twelve-strings`);
 
-      const comparePriceValues = (evt) => {
-        if (parseInt(evt.target.value, 10) < 0) {
-          evt.target.setCustomValidity(`Цена товара не может быть меньше 0`);
-          evt.target.value = ``;
-        } else {
-          evt.target.setCustomValidity(``);
-        }
+      if (filtersForm) {
+        const priceMin = filtersForm.querySelector(`#price-min`);
+        const priceMax = filtersForm.querySelector(`#price-max`);
+        const acousticCheckbox = filtersForm.querySelector(`#acoustic`);
+        const electroCheckbox = filtersForm.querySelector(`#electro`);
+        const ukuleleCheckbox = filtersForm.querySelector(`#ukulele`);
+        const fourStringsCheckbox = filtersForm.querySelector(`#four-strings`);
+        const sixStringsCheckbox = filtersForm.querySelector(`#six-strings`);
+        const sevenStringsCheckbox = filtersForm.querySelector(`#seven-strings`);
+        const twelveStringsCheckbox = filtersForm.querySelector(`#twelve-strings`);
 
-        if (parseInt(priceMin.value, 10) > parseInt(priceMax.value, 10)) {
-          const temp = priceMax.value;
-          priceMax.value = priceMin.value;
-          priceMin.value = temp;
-        }
-      };
+        const comparePriceValues = (evt) => {
+          if (parseInt(evt.target.value, 10) < 0) {
+            evt.target.setCustomValidity(`Цена товара не может быть меньше 0`);
+            evt.target.value = ``;
+          } else {
+            evt.target.setCustomValidity(``);
+          }
 
-      priceMin.addEventListener(`change`, (priceMinEvt) => {
-        comparePriceValues(priceMinEvt);
-      });
-
-      priceMax.addEventListener(`change`, (priceMaxEvt) => {
-        comparePriceValues(priceMaxEvt);
-      });
-
-      // Блокируем чекбоксы в зависимости от выбранных типов гитар
-      const checkCheckboxState = () => {
-        if (acousticCheckbox.checked && !electroCheckbox.checked && !ukuleleCheckbox.checked) {
-          fourStringsCheckbox.setAttribute(`disabled`, `disabled`);
-        } else if (!acousticCheckbox.checked && electroCheckbox.checked && !ukuleleCheckbox.checked) {
-          twelveStringsCheckbox.setAttribute(`disabled`, `disabled`);
-        } else if (!acousticCheckbox.checked && !electroCheckbox.checked && ukuleleCheckbox.checked) {
-          sixStringsCheckbox.setAttribute(`disabled`, `disabled`);
-          sevenStringsCheckbox.setAttribute(`disabled`, `disabled`);
-          twelveStringsCheckbox.setAttribute(`disabled`, `disabled`);
-        } else if (!acousticCheckbox.checked && electroCheckbox.checked && ukuleleCheckbox.checked) {
-          twelveStringsCheckbox.setAttribute(`disabled`, `disabled`);
-          sixStringsCheckbox.removeAttribute(`disabled`);
-          sevenStringsCheckbox.removeAttribute(`disabled`);
-        } else {
-          fourStringsCheckbox.removeAttribute(`disabled`);
-          sixStringsCheckbox.removeAttribute(`disabled`);
-          sevenStringsCheckbox.removeAttribute(`disabled`);
-          twelveStringsCheckbox.removeAttribute(`disabled`);
-        }
-      };
-
-      acousticCheckbox.addEventListener(`change`, checkCheckboxState);
-      electroCheckbox.addEventListener(`change`, checkCheckboxState);
-      ukuleleCheckbox.addEventListener(`change`, checkCheckboxState);
-      // ----------
-
-      filtersForm.addEventListener(`submit`, (evt) => {
-        evt.preventDefault();
-
-        const formData = new FormData(filtersForm);
-
-        let filterValues = {
-          priceMin: null,
-          priceMax: null,
-          type: [],
-          strings: []
+          if (parseInt(priceMin.value, 10) > parseInt(priceMax.value, 10)) {
+            const temp = priceMax.value;
+            priceMax.value = priceMin.value;
+            priceMin.value = temp;
+          }
         };
 
-        if (formData.get(`price-min`)) {
-          filterValues.priceMin = parseInt(formData.get(`price-min`), 10);
-        }
+        priceMin.addEventListener(`change`, (priceMinEvt) => {
+          comparePriceValues(priceMinEvt);
+        });
 
-        if (formData.get(`price-max`)) {
-          filterValues.priceMax = parseInt(formData.get(`price-max`), 10);
-        }
+        priceMax.addEventListener(`change`, (priceMaxEvt) => {
+          comparePriceValues(priceMaxEvt);
+        });
 
-        if (formData.get(`acoustic`)) {
-          filterValues.type.push(`акустическая гитара`);
-        }
+        // Блокируем чекбоксы в зависимости от выбранных типов гитар
+        const checkCheckboxState = () => {
+          if (acousticCheckbox.checked && !electroCheckbox.checked && !ukuleleCheckbox.checked) {
+            fourStringsCheckbox.setAttribute(`disabled`, `disabled`);
+          } else if (!acousticCheckbox.checked && electroCheckbox.checked && !ukuleleCheckbox.checked) {
+            twelveStringsCheckbox.setAttribute(`disabled`, `disabled`);
+          } else if (!acousticCheckbox.checked && !electroCheckbox.checked && ukuleleCheckbox.checked) {
+            sixStringsCheckbox.setAttribute(`disabled`, `disabled`);
+            sevenStringsCheckbox.setAttribute(`disabled`, `disabled`);
+            twelveStringsCheckbox.setAttribute(`disabled`, `disabled`);
+          } else if (!acousticCheckbox.checked && electroCheckbox.checked && ukuleleCheckbox.checked) {
+            twelveStringsCheckbox.setAttribute(`disabled`, `disabled`);
+            sixStringsCheckbox.removeAttribute(`disabled`);
+            sevenStringsCheckbox.removeAttribute(`disabled`);
+          } else {
+            fourStringsCheckbox.removeAttribute(`disabled`);
+            sixStringsCheckbox.removeAttribute(`disabled`);
+            sevenStringsCheckbox.removeAttribute(`disabled`);
+            twelveStringsCheckbox.removeAttribute(`disabled`);
+          }
+        };
 
-        if (formData.get(`electro`)) {
-          filterValues.type.push(`электрогитара`);
-        }
+        acousticCheckbox.addEventListener(`change`, checkCheckboxState);
+        electroCheckbox.addEventListener(`change`, checkCheckboxState);
+        ukuleleCheckbox.addEventListener(`change`, checkCheckboxState);
+        // ----------
 
-        if (formData.get(`ukulele`)) {
-          filterValues.type.push(`укулеле`);
-        }
+        filtersForm.addEventListener(`submit`, (evt) => {
+          evt.preventDefault();
 
-        if (formData.get(`four-strings`)) {
-          filterValues.strings.push(4);
-        }
+          const formData = new FormData(filtersForm);
 
-        if (formData.get(`six-strings`)) {
-          filterValues.strings.push(6);
-        }
+          let filterValues = {
+            priceMin: null,
+            priceMax: null,
+            type: [],
+            strings: []
+          };
 
-        if (formData.get(`seven-strings`)) {
-          filterValues.strings.push(7);
-        }
+          if (formData.get(`price-min`)) {
+            filterValues.priceMin = parseInt(formData.get(`price-min`), 10);
+          }
 
-        if (formData.get(`twelve-strings`)) {
-          filterValues.strings.push(12);
-        }
+          if (formData.get(`price-max`)) {
+            filterValues.priceMax = parseInt(formData.get(`price-max`), 10);
+          }
 
-        submitHandler(filterValues);
-      });
+          if (formData.get(`acoustic`)) {
+            filterValues.type.push(`акустическая гитара`);
+          }
+
+          if (formData.get(`electro`)) {
+            filterValues.type.push(`электрогитара`);
+          }
+
+          if (formData.get(`ukulele`)) {
+            filterValues.type.push(`укулеле`);
+          }
+
+          if (formData.get(`four-strings`)) {
+            filterValues.strings.push(4);
+          }
+
+          if (formData.get(`six-strings`)) {
+            filterValues.strings.push(6);
+          }
+
+          if (formData.get(`seven-strings`)) {
+            filterValues.strings.push(7);
+          }
+
+          if (formData.get(`twelve-strings`)) {
+            filterValues.strings.push(12);
+          }
+
+          submitHandler(filterValues);
+        });
+      }
     }
 
     setSortSettings(sortTypeHandler, sortFlowHandler) {
-      const sortByTypeButtons = document.querySelectorAll(`.sort__options-button`);
-      const sortByFlowButtons = document.querySelectorAll(`.sort__view-button`);
-      const sortByPriceButton = document.querySelector(`#by-price`);
-      const sortByPopularityButton = document.querySelector(`#by-popularity`);
-      const sortFlowUpButton = document.querySelector(`#up`);
-      const sortFlowDownButton = document.querySelector(`#down`);
+      const sort = document.querySelector(`.sort`);
 
-      sortByPriceButton.addEventListener(`click`, (evt) => {
-        const sortType = evt.currentTarget.id;
+      if (sort) {
+        const sortByTypeButtons = document.querySelectorAll(`.sort__options-button`);
+        const sortByFlowButtons = document.querySelectorAll(`.sort__view-button`);
+        const sortByPriceButton = document.querySelector(`#by-price`);
+        const sortByPopularityButton = document.querySelector(`#by-popularity`);
+        const sortFlowUpButton = document.querySelector(`#up`);
+        const sortFlowDownButton = document.querySelector(`#down`);
 
-        sortByTypeButtons.forEach((button) => {
-          button.classList.remove(`sort__options-button--current`);
+        sortByPriceButton.addEventListener(`click`, (evt) => {
+          const sortType = evt.currentTarget.id;
+
+          sortByTypeButtons.forEach((button) => {
+            button.classList.remove(`sort__options-button--current`);
+          });
+
+          evt.currentTarget.classList.add(`sort__options-button--current`);
+
+          sortTypeHandler(sortType);
         });
 
-        evt.currentTarget.classList.add(`sort__options-button--current`);
+        sortByPopularityButton.addEventListener(`click`, (evt) => {
+          const sortType = evt.currentTarget.id;
 
-        sortTypeHandler(sortType);
-      });
+          sortByTypeButtons.forEach((button) => {
+            button.classList.remove(`sort__options-button--current`);
+          });
 
-      sortByPopularityButton.addEventListener(`click`, (evt) => {
-        const sortType = evt.currentTarget.id;
+          evt.currentTarget.classList.add(`sort__options-button--current`);
 
-        sortByTypeButtons.forEach((button) => {
-          button.classList.remove(`sort__options-button--current`);
+          sortTypeHandler(sortType);
         });
 
-        evt.currentTarget.classList.add(`sort__options-button--current`);
+        sortFlowUpButton.addEventListener(`click`, (evt) => {
+          const sortFlow = evt.currentTarget.id;
 
-        sortTypeHandler(sortType);
-      });
+          sortByFlowButtons.forEach((button) => {
+            button.classList.remove(`sort__view-button--current`);
+          });
 
-      sortFlowUpButton.addEventListener(`click`, (evt) => {
-        const sortFlow = evt.currentTarget.id;
+          evt.currentTarget.classList.add(`sort__view-button--current`);
 
-        sortByFlowButtons.forEach((button) => {
-          button.classList.remove(`sort__view-button--current`);
+          sortFlowHandler(sortFlow);
         });
 
-        evt.currentTarget.classList.add(`sort__view-button--current`);
+        sortFlowDownButton.addEventListener(`click`, (evt) => {
+          const sortFlow = evt.currentTarget.id;
 
-        sortFlowHandler(sortFlow);
-      });
+          sortByFlowButtons.forEach((button) => {
+            button.classList.remove(`sort__view-button--current`);
+          });
 
-      sortFlowDownButton.addEventListener(`click`, (evt) => {
-        const sortFlow = evt.currentTarget.id;
+          evt.currentTarget.classList.add(`sort__view-button--current`);
 
-        sortByFlowButtons.forEach((button) => {
-          button.classList.remove(`sort__view-button--current`);
+          sortFlowHandler(sortFlow);
         });
-
-        evt.currentTarget.classList.add(`sort__view-button--current`);
-
-        sortFlowHandler(sortFlow);
-      });
+      }
     }
   }
 

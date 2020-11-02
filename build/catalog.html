@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="keywords" content="Магазин гитар, Guitar shop, купить гитару">
+    <meta name="description" content="Магазин гитар, музыкальных инструментов и гитарная мастерская в Санкт-Петербурге.Все инструменты проверены, отстроены и доведены до идеала!">
+    <meta name="author" content="Liga A">
+    <title>Guitar shop</title>
+    <link href="fonts/DroidSans.woff2" rel="preload" as="font" crossorigin="">
+    <link href="fonts/DroidSans-Bold.woff2" rel="preload" as="font" crossorigin="">
+    <link href="fonts/Poppins-Regular.woff2" rel="preload" as="font" crossorigin="">
+    <link rel="stylesheet" href="css/style.min.css">
+  </head>
+  <body>
+    <!--Header-->
+    <header class="header">
+      <div class="header__wrapper">
+        <a class="header__logo logo">
+          <img src="img/logo-header.svg" alt="Guitar shop" width="67" height="70">
+        </a>
+        <nav class="header__nav">
+          <ul class="site-list">
+            <li class="site-list__item">
+              <a class="site-list__link" href="#">Каталог</a>
+            </li>
+            <li class="site-list__item">
+              <a class="site-list__link" href="#">Где купить?</a>
+            </li>
+            <li class="site-list__item">
+              <a class="site-list__link" href="#">О компании</a>
+            </li>
+            <li class="site-list__item">
+              <a class="site-list__link" href="#">Cервис-центры</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="header__menu user-menu">
+          <a class="user-menu__link" href="#" aria-label="Мы на карте">
+            <svg width="14" height="17">
+              <use href="img/sprite_auto.svg#icon-pin"></use>
+            </svg>
+          </a>
+          <a class="user-menu__link" href="#" aria-label="Открыть поиск по сайту">
+            <svg width="14" height="14">
+              <use href="img/sprite_auto.svg#icon-search"></use>
+            </svg>
+          </a>
+          <a class="user-menu__link user-menu__link--basket" href="cart.html" aria-label="Перейти на страницу корзины">
+            <svg width="14" height="14">
+              <use href="img/sprite_auto.svg#icon-basket"></use>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="header__image-container">
+        <picture>
+          <source type="image/webp" srcset="img/bg-guitar@1x.webp 1x, img/bg-guitar@2x.webp 2x">
+          <img src="img/bg-guitar@1x.png" srcset="img/bg-guitar@2x.png 2x" alt="Гитара" width="825" height="298">
+        </picture>
+      </div>
+    </header>
+
+    <!--Main-->
+    <main class="main">
+      <h1 class="main__title">Каталог гитар</h1>
+      <ul class="breadcrumbs">
+        <li class="breadcrumbs__item">
+          <a class="breadcrumbs__link" href="#">Главная</a>
+        </li>
+        <li class="breadcrumbs__item">
+          <a class="breadcrumbs__link" href="#">Каталог</a>
+        </li>
+      </ul>
+
+      <div class="main__wrapper">
+        <section class="filters">
+          <h2 class="filters__title">Фильтр</h2>
+          <form class="filters__form" method="POST" action="https://echo.htmlacademy.ru">
+            <fieldset class="filters__fieldset">
+              <h3 class="filters__fieldset-title">Цена, ₽</h3>
+              <div class="filters__price-controls">
+                <p>
+                  <label class="visually-hidden" for="price-min">Минимальная цена</label>
+                  <input id="price-min" type="number" placeholder="1 000" name="price-min" min="1000">
+                </p>
+                <p>
+                  <label class="visually-hidden" for="price-max">Максимальная цена</label>
+                  <input id="price-max" type="number" placeholder="30 000" name="price-max" max="30000">
+                </p>
+              </div>
+            </fieldset>
+            <fieldset class="filters__fieldset">
+              <h3 class="filters__fieldset-title">Тип гитар</h3>
+              <ul class="filters__options">
+                <li class="filters__item">
+                  <input class="visually-hidden" id="acoustic" type="checkbox" name="acoustic">
+                  <label for="acoustic">Акустические гитары</label>
+                </li>
+                <li class="filters__item">
+                  <input class="visually-hidden" id="electro" type="checkbox" name="electro">
+                  <label for="electro">Электрогитары</label>
+                </li>
+                <li class="filters__item">
+                  <input class="visually-hidden" id="ukulele" type="checkbox" name="ukulele">
+                  <label for="ukulele">Укулеле</label>
+                </li>
+              </ul>
+            </fieldset>
+            <fieldset class="filters__fieldset">
+              <h3 class="filters__fieldset-title">Количество струн</h3>
+              <ul class="filters__options">
+                <li class="filters__item">
+                  <input class="visually-hidden" id="four-strings" type="checkbox" name="four-strings">
+                  <label for="four-strings">4</label>
+                </li>
+                <li class="filters__item">
+                  <input class="visually-hidden" id="six-strings" type="checkbox" name="six-strings">
+                  <label for="six-strings">6</label>
+                </li>
+                <li class="filters__item">
+                  <input class="visually-hidden" id="seven-strings" type="checkbox" name="seven-strings">
+                  <label for="seven-strings">7</label>
+                </li>
+                <li class="filters__item">
+                  <input class="visually-hidden" id="twelve-strings" type="checkbox" name="twelve-strings">
+                  <label for="twelve-strings">12</label>
+                </li>
+              </ul>
+            </fieldset>
+            <button class="filters__button" type="submit">Показать</button>
+          </form>
+        </section>
+
+        <div class="main__wrapper-inner">
+          <section class="sort">
+            <h2 class="visually-hidden">Сортировка товаров</h2>
+            <p class="sort__title">Сортировать:</p>
+            <ul class="sort__options">
+              <li class="sort__item">
+                <button class="sort__options-button" id="by-price">по цене</button>
+              </li>
+              <li class="sort__item">
+                <button class="sort__options-button" id="by-popularity">по популярности</button>
+              </li>
+            </ul>
+            <ul class="sort__view">
+              <li class="sort__view-item">
+                <button class="sort__view-button" id="up">
+                  <span class="visually-hidden">по возрастанию</span>
+                  <svg width="22" height="22">
+                    <use href="img/sprite_auto.svg#icon-arrow-up"></use>
+                  </svg>
+                </button>
+              </li>
+              <li class="sort__view-item">
+                <button class="sort__view-button" id="down">
+                  <span class="visually-hidden">по убыванию</span>
+                  <svg width="22" height="22">
+                    <use href="img/sprite_auto.svg#icon-arrow-down"></use>
+                  </svg>
+                </button>
+              </li>
+            </ul>
+          </section>
+
+          <section class="catalog">
+            <ul class="catalog__list"></ul>
+          </section>
+          <section class="pagination">
+            <ul class="pagination__list"></ul>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!--Footer-->
+    <footer class="footer">
+      <div class="footer__image-container">
+        <picture>
+          <source type="image/webp" srcset="img/bg-guitar@1x.webp 1x, img/bg-guitar@2x.webp 2x">
+          <img src="img/bg-guitar@1x.png" srcset="img/bg-guitar@2x.png 2x" alt="Гитара" width="825" height="298">
+        </picture>
+      </div>
+      <div class="footer__wrapper">
+        <div class="footer__wrapper-inner">
+          <a class="footer__logo logo">
+            <img src="img/logo-footer.svg" alt="Guitar shop" width="67" height="70">
+          </a>
+          <section class="footer__social">
+            <h2 class="visually-hidden">Мы в социальных сетях</h2>
+            <ul class="footer__social social">
+              <li class="social__item">
+                <a class="social__link" href="#" aria-label="Мы в Фейсбук">
+                  <svg width="24" height="24">
+                    <use href="img/sprite_auto.svg#icon-facebook"></use>
+                  </svg>
+                </a>
+              </li>
+              <li class="social__item">
+                <a class="social__link" href="#" aria-label="Мы в Инстаграм">
+                  <svg width="24" height="24">
+                    <use href="img/sprite_auto.svg#icon-instagram"></use>
+                  </svg>
+                </a>
+              </li>
+              <li class="social__item">
+                <a class="social__link" href="#" aria-label="Мы в Твиттере">
+                  <svg width="24" height="24">
+                    <use href="img/sprite_auto.svg#icon-twitter"></use>
+                  </svg>
+                </a>
+              </li>
+            </ul>
+          </section>
+        </div>
+        <section class="footer__about-us about-us">
+          <h2 class="about-us__title">О нас</h2>
+          <p class="about-us__description">Магазин гитар, музыкальных инструментов и гитарная мастерская в Санкт-Петербурге.</p>
+          <p class="about-us__description">Все инструменты проверены, отстроены и доведены до идеала!</p>
+        </section>
+        <section class="footer__catalog-list catalog-list">
+          <h2 class="catalog-list__title">Каталог</h2>
+          <ul class="catalog-list__list">
+            <li class="catalog-list__item">
+              <a class="catalog-list__link" href="#">Акустические гитары</a>
+            </li>
+            <li class="catalog-list__item">
+              <a class="catalog-list__link" href="#">Классические гитары</a>
+            </li>
+            <li class="catalog-list__item">
+              <a class="catalog-list__link" href="#">Электрогитары</a>
+            </li>
+            <li class="catalog-list__item">
+              <a class="catalog-list__link" href="#">Бас-гитары</a>
+            </li>
+            <li class="catalog-list__item">
+              <a class="catalog-list__link" href="#">Укулеле</a>
+            </li>
+          </ul>
+        </section>
+        <section class="footer__information information">
+          <h2 class="information__title">Информация</h2>
+          <ul class="information__list">
+            <li class="information__item">
+              <a class="information__link" href="#">Где купить?</a>
+            </li>
+            <li class="information__item">
+              <a class="information__link" href="#">Блог</a>
+            </li>
+            <li class="information__item">
+              <a class="information__link" href="#">Вопрос - ответ</a>
+            </li>
+            <li class="information__item">
+              <a class="information__link" href="#">Возврат</a>
+            </li>
+            <li class="information__item">
+              <a class="information__link" href="#">Сервис-центры</a>
+            </li>
+          </ul>
+        </section>
+        <section class="footer__contacts contacts">
+          <h2 class="contacts__title">Контакты</h2>
+          <p class="contacts__address">
+            г. Санкт-Петербург, м. Невский проспект, ул. Казанская 6.
+            <a class="contacts__link" href="tel:88125005050">
+              <svg width="10" height="10">
+                <use href="img/sprite_auto.svg#icon-phone"></use>
+              </svg>
+              8-812-500-50-50
+            </a>
+          </p>
+          <p class="contacts__hours">Режим работы:
+            <span>
+              <svg width="10" height="10">
+                <use href="img/sprite_auto.svg#icon-clock"></use>
+              </svg>
+              с 11:00 до 20:00,
+            </span>
+            без выходных.</p>
+        </section>
+      </div>
+    </footer>
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
