@@ -496,15 +496,15 @@
         document.removeEventListener(`keydown`, closePopupEscPress);
       };
 
-      closeButton.addEventListener('click', () => {
-        closePopup();
-      });
-
       const closePopupEscPress = (evt) => {
         if (evt.key === `Escape`) {
           closePopup();
         }
       };
+
+      closeButton.addEventListener('click', () => {
+        closePopup();
+      });
 
       document.addEventListener(`keydown`, closePopupEscPress);
 
@@ -517,6 +517,7 @@
       addButton.addEventListener(`click`, (evt) => {
         addButtonClickHandler(evt.currentTarget.dataset.id);
         closePopup();
+        this.renderSuccessPopup();
       });
     }
 
@@ -535,6 +536,68 @@
       const value = shoppingCartLink.querySelector(`.user-menu__value`);
 
       shoppingCartLink.removeChild(value);
+    }
+
+    createSuccessPopupTemplate() {
+      return (
+        `<div class="popup-success">
+        <div class="popup-success__overlay">
+          <div class="popup-success__body">
+            <p class="popup-success__title">Товар успешно добавлен в корзину</p>
+            <div class="popup-success__wrapper">
+              <a class="popup-success__open-bag" href="#"><span>Перейти в корзину</span></a>
+              <button class="popup-success__continue">Продолжить покупки</button>
+              <button class="popup-success__close" aria-label="Закрыть попап">
+                <svg width="18" height="18">
+                  <use href="img/sprite_auto.svg#icon-cross"></use>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>`
+      );
+    }
+
+    renderSuccessPopup() {
+      this.renderCard(document.body, this.createSuccessPopupTemplate());
+
+      const popup = document.querySelector(`.popup-success`);
+      const closeButton = popup.querySelector(`.popup-success__close`);
+      const popupOverlay = popup.querySelector(`.popup-success__overlay`);
+      const continueButton = popup.querySelector(`.popup-success__continue`);
+      const openBagButton = popup.querySelector(`.popup-success__open-bag`);
+
+      const closePopup = () => {
+        document.body.removeChild(popup);
+        document.removeEventListener(`keydown`, closePopupEscPress);
+      };
+
+      const closePopupEscPress = (evt) => {
+        if (evt.key === `Escape`) {
+          closePopup();
+        }
+      };
+
+      closeButton.addEventListener('click', () => {
+        closePopup();
+      });
+
+      document.addEventListener(`keydown`, closePopupEscPress);
+
+      popupOverlay.addEventListener(`click`, (evt) => {
+        if (evt.target === popupOverlay) {
+          closePopup();
+        }
+      });
+
+      continueButton.addEventListener(`click`, () => {
+        closePopup();
+      });
+
+      openBagButton.addEventListener(`click`, () => {
+        closePopup();
+      });
     }
 
     createPaginationItemTemplate(count) {
