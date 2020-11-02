@@ -7,6 +7,8 @@ export class Presenter {
     this.filtersFormSubmitHandler = this.filtersFormSubmitHandler.bind(this);
     this.sortByTypeHandler = this.sortByTypeHandler.bind(this);
     this.sortByFlowHandler = this.sortByFlowHandler.bind(this);
+    this.cardButtonClickHandler = this.cardButtonClickHandler.bind(this);
+    this.popupAddButtonClickHandler = this.popupAddButtonClickHandler.bind(this);
   }
 
   init() {
@@ -14,13 +16,19 @@ export class Presenter {
   }
 
   renderCatalogPage() {
-    this.view.renderCatalog(this.state.getCatalogDataPerPage());
+    this.renderCatalog();
 
     this.renderPaginationList();
 
     this.setFiltersFormSettings();
 
     this.setSortSettings();
+
+    this.view.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
+  }
+
+  renderCatalog() {
+    this.view.renderCatalog(this.state.getCatalogDataPerPage(), this.cardButtonClickHandler);
   }
 
   renderPaginationList() {
@@ -35,6 +43,21 @@ export class Presenter {
     this.view.setSortSettings(this.sortByTypeHandler, this.sortByFlowHandler);
   }
 
+  cardButtonClickHandler(id) {
+    this.view.renderAddPopup(this.state.getCatalogData()[id], this.popupAddButtonClickHandler);
+  }
+
+  popupAddButtonClickHandler(id) {
+    // добавляем товар в state
+    this.state.addGoodsInShoppingCart(id);
+
+    // удаляем старое значение из view
+    this.view.removeShoppingCartValue();
+
+    // перерисовываем кол-во товаров в корзине
+    this.view.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
+  }
+
   paginationLinkClickHandler(page) {
     // обновляем текущую страницу в state
     this.state.setCurrentPage(page);
@@ -43,7 +66,7 @@ export class Presenter {
     this.state.setItemsOffset();
 
     // перерисовываем каталог
-    this.view.renderCatalog(this.state.getCatalogDataPerPage());
+    this.renderCatalog();
 
     // перерисовываем пагинацию
     this.renderPaginationList();
@@ -54,7 +77,7 @@ export class Presenter {
     this.state.setFilters(values);
 
     // перерисовываем каталог
-    this.view.renderCatalog(this.state.getCatalogDataPerPage());
+    this.renderCatalog();
 
     // перерисовываем пагинацию
     this.renderPaginationList();
@@ -65,7 +88,7 @@ export class Presenter {
     this.state.setSortType(type);
 
     // перерисовываем каталог
-    this.view.renderCatalog(this.state.getCatalogDataPerPage());
+    this.renderCatalog();
 
     // перерисовываем пагинацию
     this.renderPaginationList();
@@ -76,7 +99,7 @@ export class Presenter {
     this.state.setSortFlow(flow);
 
     // перерисовываем каталог
-    this.view.renderCatalog(this.state.getCatalogDataPerPage());
+    this.renderCatalog();
 
     // перерисовываем пагинацию
     this.renderPaginationList();

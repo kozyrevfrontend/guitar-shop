@@ -16,11 +16,24 @@ export class State {
       flow: ``
     };
 
+    this.shoppingCart = {};
+
     this.currentPage = 1;
 
     this.catalogItemsPerPage = 9;
 
     this.itemsOffset = 0;
+  }
+
+  countGoodsInShoppingCart() {
+    return Object.keys(this.shoppingCart).length;
+  }
+
+  addGoodsInShoppingCart(id) {
+    const good = this.catalogData[id];
+    const articule = good.articule;
+
+    this.shoppingCart[articule] = good;
   }
 
   clearFilters() {

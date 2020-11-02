@@ -265,11 +265,24 @@
         flow: ``
       };
 
+      this.shoppingCart = {};
+
       this.currentPage = 1;
 
       this.catalogItemsPerPage = 9;
 
       this.itemsOffset = 0;
+    }
+
+    countGoodsInShoppingCart() {
+      return Object.keys(this.shoppingCart).length;
+    }
+
+    addGoodsInShoppingCart(id) {
+      const good = this.catalogData[id];
+      const articule = good.articule;
+
+      this.shoppingCart[articule] = good;
     }
 
     clearFilters() {
@@ -390,7 +403,7 @@
         <span class="card__popularity">${card.popularity}</span>
       </div>
       <a class="card__link-more" href="#"><span>Подробнее</span></a>
-      <button class="card__button" type="button">
+      <button class="card__button" type="button" data-id="${card.articule}">
         <svg width="12" height="12">
           <use href="img/sprite_auto.svg#icon-shoping-bag"></use>
         </svg>
@@ -416,7 +429,7 @@
       }
     }
 
-    renderCatalog(catalogData) {
+    renderCatalog(catalogData, clickHandler) {
       const catalogList = document.querySelector(`.catalog__list`);
 
       this.deleteChildrenElements(catalogList);
@@ -424,6 +437,104 @@
       catalogData.forEach((item) => {
         this.renderCard(catalogList, this.createCatalogItemTemplate(item));
       });
+
+      const cardButtons = catalogList.querySelectorAll(`.card__button`);
+
+      const handler = (node) => {
+        node.addEventListener(`click`, (evt) => {
+          evt.preventDefault();
+
+          clickHandler(evt.currentTarget.dataset.id);
+        });
+      };
+
+      cardButtons.forEach((button) => {
+        handler(button);
+      });
+    }
+
+    createAddPopupTemplate(card) {
+      return (
+        `<div class="popup-add">
+        <div class="popup-add__overlay">
+          <section class="popup-add__add">
+            <h2 class="popup-add__add-title">Добавить товар в корзину</h2>
+            <div class="popup-add__add-wrapper">
+              <picture>
+                <source type="image/webp" srcset="img/${card.image}@1x.webp 1x, img/${card.image}@2x.webp 2x">
+                <img src="img/${card.image}@1x.png" srcset="img/${card.image}@1x.png 2x" alt="${card.model}" width="56" height="128">
+              </picture>
+              <div class="popup-add__add-description">
+                <h3 class="popup-add__add-model">Гитара ${card.model}</h3>
+                <p class="popup-add__add-articule">Артикул: ${card.articule}</p>
+                <p class="popup-add__add-type">${card.type}, ${card.stringsNumber} струнная </p>
+                <p class="popup-add__add-price">Цена: ${card.price.toLocaleString(`ru-RU`)} ₽</p>
+              </div>
+              <button class="popup-add__add-button" data-id="${card.articule}">Добавить в корзину</button>
+              <button class="popup-add__add-close" aria-label="Закрыть попап">
+                <svg width="18" height="18">
+                  <use href="img/sprite_auto.svg#icon-cross"></use>
+                </svg>
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>`
+      );
+    }
+
+    renderAddPopup(card, addButtonClickHandler) {
+      this.renderCard(document.body, this.createAddPopupTemplate(card));
+
+      const popup = document.querySelector(`.popup-add`);
+      const closeButton = popup.querySelector(`.popup-add__add-close`);
+      const popupOverlay = popup.querySelector(`.popup-add__overlay`);
+      const addButton = popup.querySelector(`.popup-add__add-button`);
+
+      const closePopup = () => {
+        document.body.removeChild(popup);
+        document.removeEventListener(`keydown`, closePopupEscPress);
+      };
+
+      closeButton.addEventListener('click', () => {
+        closePopup();
+      });
+
+      const closePopupEscPress = (evt) => {
+        if (evt.key === `Escape`) {
+          closePopup();
+        }
+      };
+
+      document.addEventListener(`keydown`, closePopupEscPress);
+
+      popupOverlay.addEventListener(`click`, (evt) => {
+        if (evt.target === popupOverlay) {
+          closePopup();
+        }
+      });
+
+      addButton.addEventListener(`click`, (evt) => {
+        addButtonClickHandler(evt.currentTarget.dataset.id);
+        closePopup();
+      });
+    }
+
+    createShoppingCartValueTemplate(value) {
+      return `<span class="user-menu__value">${value}</span>`;
+    }
+
+    renderShoppingCartValue(value) {
+      const shoppingCartLink = document.querySelector(`.user-menu__link--basket`);
+
+      this.renderCard(shoppingCartLink, this.createShoppingCartValueTemplate(value));
+    }
+
+    removeShoppingCartValue() {
+      const shoppingCartLink = document.querySelector(`.user-menu__link--basket`);
+      const value = shoppingCartLink.querySelector(`.user-menu__value`);
+
+      shoppingCartLink.removeChild(value);
     }
 
     createPaginationItemTemplate(count) {
@@ -665,6 +776,8 @@
       this.filtersFormSubmitHandler = this.filtersFormSubmitHandler.bind(this);
       this.sortByTypeHandler = this.sortByTypeHandler.bind(this);
       this.sortByFlowHandler = this.sortByFlowHandler.bind(this);
+      this.cardButtonClickHandler = this.cardButtonClickHandler.bind(this);
+      this.popupAddButtonClickHandler = this.popupAddButtonClickHandler.bind(this);
     }
 
     init() {
@@ -672,13 +785,19 @@
     }
 
     renderCatalogPage() {
-      this.view.renderCatalog(this.state.getCatalogDataPerPage());
+      this.renderCatalog();
 
       this.renderPaginationList();
 
       this.setFiltersFormSettings();
 
       this.setSortSettings();
+
+      this.view.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
+    }
+
+    renderCatalog() {
+      this.view.renderCatalog(this.state.getCatalogDataPerPage(), this.cardButtonClickHandler);
     }
 
     renderPaginationList() {
@@ -693,6 +812,21 @@
       this.view.setSortSettings(this.sortByTypeHandler, this.sortByFlowHandler);
     }
 
+    cardButtonClickHandler(id) {
+      this.view.renderAddPopup(this.state.getCatalogData()[id], this.popupAddButtonClickHandler);
+    }
+
+    popupAddButtonClickHandler(id) {
+      // добавляем товар в state
+      this.state.addGoodsInShoppingCart(id);
+
+      // удаляем старое значение из view
+      this.view.removeShoppingCartValue();
+
+      // перерисовываем кол-во товаров в корзине
+      this.view.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
+    }
+
     paginationLinkClickHandler(page) {
       // обновляем текущую страницу в state
       this.state.setCurrentPage(page);
@@ -701,7 +835,7 @@
       this.state.setItemsOffset();
 
       // перерисовываем каталог
-      this.view.renderCatalog(this.state.getCatalogDataPerPage());
+      this.renderCatalog();
 
       // перерисовываем пагинацию
       this.renderPaginationList();
@@ -712,7 +846,7 @@
       this.state.setFilters(values);
 
       // перерисовываем каталог
-      this.view.renderCatalog(this.state.getCatalogDataPerPage());
+      this.renderCatalog();
 
       // перерисовываем пагинацию
       this.renderPaginationList();
@@ -723,7 +857,7 @@
       this.state.setSortType(type);
 
       // перерисовываем каталог
-      this.view.renderCatalog(this.state.getCatalogDataPerPage());
+      this.renderCatalog();
 
       // перерисовываем пагинацию
       this.renderPaginationList();
@@ -734,7 +868,7 @@
       this.state.setSortFlow(flow);
 
       // перерисовываем каталог
-      this.view.renderCatalog(this.state.getCatalogDataPerPage());
+      this.renderCatalog();
 
       // перерисовываем пагинацию
       this.renderPaginationList();
