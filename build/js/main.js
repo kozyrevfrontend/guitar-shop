@@ -275,7 +275,9 @@
     }
 
     countGoodsInShoppingCart() {
-      return Object.keys(this.shoppingCart).length;
+      localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
+
+      return Object.keys(JSON.parse(localStorage.getItem(`shoppingCart`))).length;
     }
 
     addGoodsInShoppingCart(id) {
@@ -283,6 +285,8 @@
       const articule = good.articule;
 
       this.shoppingCart[articule] = good;
+
+      localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
     }
 
     clearFilters() {
@@ -870,6 +874,8 @@
     }
 
     renderCatalogPage() {
+      this.renderShoppingCartValue();
+
       this.renderCatalog();
 
       this.renderPaginationList();
@@ -877,12 +883,14 @@
       this.setFiltersFormSettings();
 
       this.setSortSettings();
-
-      this.view.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
     }
 
     renderCatalog() {
       this.view.renderCatalog(this.state.getCatalogDataPerPage(), this.cardButtonClickHandler);
+    }
+
+    renderShoppingCartValue() {
+      this.view.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
     }
 
     renderPaginationList() {

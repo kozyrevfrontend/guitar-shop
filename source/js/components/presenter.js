@@ -17,6 +17,8 @@ export class Presenter {
   }
 
   renderCatalogPage() {
+    this.renderShoppingCartValue();
+
     this.renderCatalog();
 
     this.renderPaginationList();
@@ -24,12 +26,14 @@ export class Presenter {
     this.setFiltersFormSettings();
 
     this.setSortSettings();
-
-    this.view.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
   }
 
   renderCatalog() {
     this.view.renderCatalog(this.state.getCatalogDataPerPage(), this.cardButtonClickHandler);
+  }
+
+  renderShoppingCartValue() {
+    this.view.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
   }
 
   renderPaginationList() {

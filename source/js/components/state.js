@@ -26,7 +26,9 @@ export class State {
   }
 
   countGoodsInShoppingCart() {
-    return Object.keys(this.shoppingCart).length;
+    localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
+
+    return Object.keys(JSON.parse(localStorage.getItem(`shoppingCart`))).length;
   }
 
   addGoodsInShoppingCart(id) {
@@ -34,6 +36,8 @@ export class State {
     const articule = good.articule;
 
     this.shoppingCart[articule] = good;
+
+    localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
   }
 
   clearFilters() {
