@@ -1,0 +1,14 @@
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.popup__overlay {
+  position: relative;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(#585757, 0.6%);
+}

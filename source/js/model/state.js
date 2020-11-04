@@ -12,8 +12,8 @@ export class State {
     };
 
     this.sort = {
-      type: ``,
-      flow: ``
+      type: null,
+      flow: null
     };
 
     this.shoppingCart = {};
@@ -25,12 +25,6 @@ export class State {
     this.itemsOffset = 0;
   }
 
-  countGoodsInShoppingCart() {
-    localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
-
-    return Object.keys(JSON.parse(localStorage.getItem(`shoppingCart`))).length;
-  }
-
   addGoodsInShoppingCart(id) {
     const good = this.catalogData[id];
     const articule = good.articule;
@@ -38,6 +32,17 @@ export class State {
     this.shoppingCart[articule] = good;
 
     localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
+  }
+
+  getCartFromLocalStorage() {
+    if (localStorage.getItem(`shoppingCart`)) {
+      return JSON.parse(localStorage.getItem(`shoppingCart`));
+    }
+    return {};
+  }
+
+  countGoodsInShoppingCart() {
+    return Object.keys(this.getCartFromLocalStorage()).length;
   }
 
   clearFilters() {
@@ -52,7 +57,11 @@ export class State {
   }
 
   getCatalogDataPerPage() {
-    return Object.values(this.getSortedData()).slice(this.itemsOffset, this.itemsOffset + this.catalogItemsPerPage);
+    if (this.sort.type || this.sort.flow) {
+      return Object.values(this.getSortedData()).slice(this.itemsOffset, this.itemsOffset + this.catalogItemsPerPage);
+    }
+
+    return Object.values(this.getFilteredCatalogData()).slice(this.itemsOffset, this.itemsOffset + this.catalogItemsPerPage);
   }
 
   setCurrentPage(value) {
@@ -82,6 +91,8 @@ export class State {
     this.filters.price.max = objectData.priceMax;
     this.filters.type = objectData.type;
     this.filters.strings = objectData.strings;
+    this.currentPage = 1;
+    this.itemsOffset = 0;
   }
 
   getFilteredCatalogData() {
@@ -125,26 +136,15 @@ export class State {
   getSortedData() {
     const catalogData = Object.values(this.getFilteredCatalogData());
 
-    return catalogData.sort((a, b) => {
-      if (this.sort.flow === `down` && this.sort.type === `by-price`) {
-        return parseInt(b.price, 10) - parseInt(a.price, 10);
-      } else if (this.sort.flow === `up` && this.sort.type === `by-popularity`) {
+    const flow = this.sort.flow || `up`;
+    const type = this.sort.type || `by-price`;
+    const sorted = catalogData.sort((a, b) => {
+      if (type === `by-popularity`) {
         return a.popularity - b.popularity;
-      } else if (this.sort.flow === `down` && this.sort.type === `by-popularity`) {
-        return b.popularity - a.popularity;
-      } else if (this.sort.flow === `up` && this.sort.type === `by-price`) {
-        return parseInt(a.price, 10) - parseInt(b.price, 10);
-      } else if (this.sort.flow === `up` && this.sort.type === ``) {
-        return parseInt(a.price, 10) - parseInt(b.price, 10);
-      } else if (this.sort.flow === `down` && this.sort.type === ``) {
-        return parseInt(b.price, 10) - parseInt(a.price, 10);
-      } else if (this.sort.flow === `` && this.sort.type === `by-price`) {
-        return parseInt(a.price, 10) - parseInt(b.price, 10);
-      } else if (this.sort.flow === `` && this.sort.type === `by-popularity`) {
-        return a.popularity - b.popularity;
-      } else {
-        return catalogData;
       }
+      return parseInt(a.price, 10) - parseInt(b.price, 10);
     });
+
+    return flow === `up` ? sorted : sorted.reverse();
   }
 }

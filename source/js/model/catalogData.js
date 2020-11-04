@@ -1,4 +1,17 @@
-export const catalog = {
+// export const GUITAR_TYPES = {
+//   ELECTRO: `ELECTRO`,
+//   ACOUSTIC: `ACOUSTIC`,
+//   UKULELE: `UKULELE`
+// };
+
+// export const GUITAR_NAMES = {
+//   ELECTRO: {
+//     single: `электрогитара`,
+//     multiple: `Электрогитары`
+//   }
+// };
+
+export const catalogData = {
   SO757575: {
     articule: `SO757575`,
     model: `Честер Bass`,

@@ -1,7 +1,12 @@
-export class Presenter {
-  constructor(myState, myView) {
-    this.state = myState;
-    this.view = myView;
+export class CatalogPresenter {
+  constructor(state, catalogView, popupView, shoppingCartView, paginationView, filtersView, sortView) {
+    this.state = state;
+    this.catalogView = catalogView;
+    this.popupView = popupView;
+    this.shoppingCartView = shoppingCartView;
+    this.paginationView = paginationView;
+    this.filtersView = filtersView;
+    this.sortView = sortView;
 
     this.paginationLinkClickHandler = this.paginationLinkClickHandler.bind(this);
     this.filtersFormSubmitHandler = this.filtersFormSubmitHandler.bind(this);
@@ -29,27 +34,27 @@ export class Presenter {
   }
 
   renderCatalog() {
-    this.view.renderCatalog(this.state.getCatalogDataPerPage(), this.cardButtonClickHandler);
+    this.catalogView.renderCatalog(this.state.getCatalogDataPerPage(), this.cardButtonClickHandler);
   }
 
   renderShoppingCartValue() {
-    this.view.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
+    this.shoppingCartView.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
   }
 
   renderPaginationList() {
-    this.view.renderPaginationList(this.state.getTotalPagesCount(), this.paginationLinkClickHandler, this.state.getCurrentPage(), this.paginationLinkForwardClickHandler);
+    this.paginationView.renderPaginationList(this.state.getTotalPagesCount(), this.paginationLinkClickHandler, this.state.getCurrentPage(), this.paginationLinkForwardClickHandler);
   }
 
   setFiltersFormSettings() {
-    this.view.setFiltersFormSettings(this.filtersFormSubmitHandler);
+    this.filtersView.setFiltersFormSettings(this.filtersFormSubmitHandler);
   }
 
   setSortSettings() {
-    this.view.setSortSettings(this.sortByTypeHandler, this.sortByFlowHandler);
+    this.sortView.setSortSettings(this.sortByTypeHandler, this.sortByFlowHandler);
   }
 
   cardButtonClickHandler(id) {
-    this.view.renderAddPopup(this.state.getCatalogData()[id], this.popupAddButtonClickHandler);
+    this.popupView.renderAddPopup(this.state.getCatalogData()[id], this.popupAddButtonClickHandler);
   }
 
   popupAddButtonClickHandler(id) {
@@ -57,10 +62,10 @@ export class Presenter {
     this.state.addGoodsInShoppingCart(id);
 
     // удаляем старое значение из view
-    this.view.removeShoppingCartValue();
+    this.shoppingCartView.removeShoppingCartValue();
 
     // перерисовываем кол-во товаров в корзине
-    this.view.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
+    this.renderShoppingCartValue();
   }
 
   paginationLinkClickHandler(page) {

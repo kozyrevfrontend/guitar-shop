@@ -1,19 +1,4 @@
 .popup-add {
-  position: fixed;
-  top: 0;
-  left: 0;
-}
-
-.popup-add__overlay {
-  position: relative;
-
-  width: 100vw;
-  height: 100vh;
-
-  background-color: rgba(#585757, 0.6%);
-}
-
-.popup-add__add {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -32,13 +17,13 @@
   transform: translate(-50%, -50%);
 }
 
-.popup-add__add-wrapper {
+.popup-add__wrapper {
   position: relative;
 
   display: flex;
 }
 
-.popup-add__add-title {
+.popup-add__title {
   margin: 0;
   margin-bottom: 23px;
 
@@ -49,12 +34,12 @@
   color: #474747;
 }
 
-.popup-add__add-description {
+.popup-add__description {
   margin-left: 41px;
   padding-top: 16px;
 }
 
-.popup-add__add-model {
+.popup-add__model {
   margin: 0;
   margin-bottom: 14px;
 
@@ -66,7 +51,7 @@
   color: #000000;
 }
 
-.popup-add__add-articule {
+.popup-add__articule {
   margin: 0;
   margin-bottom: 6px;
 
@@ -77,7 +62,7 @@
   color: #000000;
 }
 
-.popup-add__add-type {
+.popup-add__type {
   margin: 0;
   margin-bottom: 20px;
 
@@ -85,10 +70,15 @@
   font-weight: 400;
   line-height: 15px;
   letter-spacing: 0.05em;
+  text-transform: capitalize;
   color: #000000;
+
+  span {
+    text-transform: none;
+  }
 }
 
-.popup-add__add-price {
+.popup-add__price {
   margin: 0;
 
   font-size: 20px;
@@ -98,7 +88,7 @@
   color: #000000;
 }
 
-.popup-add__add-button {
+.popup-add__button {
   display: block;
   min-width: 220px;
   height: 46px;
@@ -128,7 +118,7 @@
   }
 }
 
-.popup-add__add-close {
+.popup-add__close {
   position: absolute;
   top: -49px;
   right: -36px;
