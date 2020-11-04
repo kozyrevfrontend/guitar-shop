@@ -36,13 +36,13 @@ export class State {
 
   getCartFromLocalStorage() {
     if (localStorage.getItem(`shoppingCart`)) {
-      return JSON.parse(localStorage.getItem(`shoppingCart`));
+      return Object.values(JSON.parse(localStorage.getItem(`shoppingCart`)));
     }
     return {};
   }
 
   countGoodsInShoppingCart() {
-    return Object.keys(this.getCartFromLocalStorage()).length;
+    return this.getCartFromLocalStorage().length;
   }
 
   clearFilters() {

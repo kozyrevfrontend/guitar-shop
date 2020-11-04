@@ -8,7 +8,12 @@ import { filters } from './views/catalog/filters';
 import { sort } from './views/catalog/sort';
 import { CatalogPresenter } from './presenters/catalogPresenter';
 
+import { cart } from './views/cart/cart';
+import { CartPresenter } from './presenters/cartPresenter';
+
 const state = new State(catalogData);
 const catalogPresenter = new CatalogPresenter(state, catalogView, popup, shoppingCart, pagination, filters, sort);
+const cartPresenter = new CartPresenter(state, cart);
 
 catalogPresenter.init();
+cartPresenter.init();
