@@ -278,7 +278,7 @@
         flow: null
       };
 
-      this.shoppingCart = {};
+      this.shoppingCart = JSON.parse(localStorage.getItem(`shoppingCart`)) || {};
 
       this.currentPage = 1;
 
@@ -288,23 +288,65 @@
     }
 
     addGoodsInShoppingCart(id) {
+      if (this.shoppingCart[id]) {
+        this.shoppingCart[id].count++;
+        this.shoppingCart[id].finalPrice = this.shoppingCart[id].count * this.shoppingCart[id].price;
+        localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
+        return;
+      }
+
       const good = this.catalogData[id];
       const articule = good.articule;
+
+      good.count = 1;
+      good.finalPrice = good.count * good.price;
 
       this.shoppingCart[articule] = good;
 
       localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
     }
 
+    deleteGoodFromShoppingCart(id) {
+      if (this.shoppingCart[id]) {
+        delete this.shoppingCart[id];
+        localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
+      }
+    }
+
     getCartFromLocalStorage() {
       if (localStorage.getItem(`shoppingCart`)) {
         return Object.values(JSON.parse(localStorage.getItem(`shoppingCart`)));
       }
-      return {};
+      return Object.values({});
+    }
+
+    increaseCartCount(id) {
+      this.shoppingCart[id].count++;
+      this.shoppingCart[id].finalPrice = this.shoppingCart[id].count * this.shoppingCart[id].price;
+      localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
+    }
+
+    decreaseCartCount(id) {
+      if (this.shoppingCart[id].count > 1) {
+        this.shoppingCart[id].count--;
+        this.shoppingCart[id].finalPrice = this.shoppingCart[id].count * this.shoppingCart[id].price;
+        localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
+      }
     }
 
     countGoodsInShoppingCart() {
-      return this.getCartFromLocalStorage().length;
+      const goods = this.getCartFromLocalStorage();
+      if (goods.length > 0) {
+        let summ = null;
+
+        goods.forEach((good) => {
+          summ += good.count;
+        });
+
+        return summ;
+      }
+
+      return goods.length;
     }
 
     clearFilters() {
@@ -441,7 +483,7 @@
     );
   }
 
-  function renderElement(parentElement, template, place = `beforeEnd`) {
+  function renderElement(parentElement, template, place = `beforeend`) {
     parentElement.insertAdjacentHTML(place, template);
   }
 
@@ -1095,12 +1137,12 @@
       </div>
       <p class="cart__catalog-price">${card.price} ₽</p>
         <div class="cart__count">
-          <button class="cart__count-decrease">-</button>
-          <p class="cart__count-value"><span>1</span></p>
-          <button class="cart__count-increase">+</button>
+          <button class="cart__count-decrease" data-id="${card.articule}">-</button>
+          <p class="cart__count-value" data-id="${card.articule}"></p>
+          <button class="cart__count-increase" data-id="${card.articule}">+</button>
         </div>
-        <p class="cart__final-price">${card.price} ₽</p>
-        <button class="cart__button-close" aria-label="Удалить товар из корзины">
+        <p class="cart__final-price" data-id="${card.articule}"></p>
+        <button class="cart__button-close" data-id="${card.articule}" aria-label="Удалить товар из корзины">
           <svg width="18" height="18">
             <use href="img/sprite_auto.svg#icon-cross"></use>
           </svg>
@@ -1109,50 +1151,183 @@
     );
   }
 
+  function createShoppingCartCountTemplate(card) {
+    return `<span>${card.count}</span>`;
+  }
+
+  function createCartTotalPriceTemplate(card) {
+    return `<span>${card.finalPrice} ₽</span>`;
+  }
+
   class Cart {
     constructor(markups, utils) {
       this.createShoppingCartTemplate = markups.createShoppingCartTemplate;
+      this.createShoppingCartCountTemplate = markups.createShoppingCartCountTemplate;
+      this.createCartTotalPriceTemplate = markups.createCartTotalPriceTemplate;
       this.renderElement = utils.renderElement;
+      this.deleteChildrenElements = utils.deleteChildrenElements;
     }
 
-    renderCart(cartData) {
+    renderCart(cartData, decreaseClickHandler, increaseClickHandler, deleteClickHandler) {
       const cartList = document.querySelector(`.cart__list`);
 
       if (cartList) {
+        this.deleteChildrenElements(cartList);
+
         cartData.forEach((item) => {
           this.renderElement(cartList, this.createShoppingCartTemplate(item));
+
+          this.renderCartCount(item);
+
+          this.renderCartFinalPrice(item);
+        });
+
+        const decreaseHandler = (node) => {
+          node.addEventListener(`click`, (evt) => {
+            decreaseClickHandler(evt.currentTarget.dataset.id);
+          });
+        };
+
+        const increaseHandler = (node) => {
+          node.addEventListener(`click`, (evt) => {
+            increaseClickHandler(evt.currentTarget.dataset.id);
+          });
+        };
+
+        const deleteHandler = (node) => {
+          node.addEventListener(`click`, (evt) => {
+            deleteClickHandler(evt.currentTarget.dataset.id);
+          });
+        };
+
+        const decreaseButtons = cartList.querySelectorAll(`.cart__count-decrease`);
+        const increaseButtons = cartList.querySelectorAll(`.cart__count-increase`);
+        const deleteButtons = cartList.querySelectorAll(`.cart__button-close`);
+
+        decreaseButtons.forEach((button) => {
+          decreaseHandler(button);
+        });
+
+        increaseButtons.forEach((button) => {
+          increaseHandler(button);
+        });
+
+        deleteButtons.forEach((button) => {
+          deleteHandler(button);
         });
       }
+    }
+
+    renderCartCount(data) {
+      const cartList = document.querySelector(`.cart__list`);
+      const countValue = cartList.querySelector(`.cart__count-value[data-id="${data.articule}"]`);
+
+      this.deleteChildrenElements(countValue);
+
+      this.renderElement(countValue, this.createShoppingCartCountTemplate(data));
+    }
+
+    renderCartFinalPrice(data) {
+      const cartList = document.querySelector(`.cart__list`);
+      const finalPrice = cartList.querySelector(`.cart__final-price[data-id="${data.articule}"]`);
+
+      this.deleteChildrenElements(finalPrice);
+
+      this.renderElement(finalPrice, this.createCartTotalPriceTemplate(data));
     }
   }
 
   const cart = new Cart(
     {
-      createShoppingCartTemplate
+      createShoppingCartTemplate,
+      createShoppingCartCountTemplate,
+      createCartTotalPriceTemplate
     },
     {
-      renderElement
+      renderElement,
+      deleteChildrenElements
     }
   );
 
   class CartPresenter {
-    constructor(state, cartView) {
+    constructor(state, shoppingCartView, cartView) {
       this.state = state;
+      this.shoppingCartView = shoppingCartView;
       this.cartView = cartView;
+
+      this.increaseClickHandler = this.increaseClickHandler.bind(this);
+      this.decreaseClickHandler = this.decreaseClickHandler.bind(this);
+      this.deleteClickHandler = this.deleteClickHandler.bind(this);
     }
 
     init() {
+      this.shoppingCartView.removeShoppingCartValue();
+
+      this.renderShoppingCartValue();
+
       this.renderCart();
     }
 
     renderCart() {
-      this.cartView.renderCart(this.state.getCartFromLocalStorage());
+      this.cartView.renderCart(this.state.getCartFromLocalStorage(), this.decreaseClickHandler, this.increaseClickHandler, this.deleteClickHandler);
+    }
+
+    renderShoppingCartValue() {
+      this.shoppingCartView.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
+    }
+
+    increaseClickHandler(id) {
+      // увеличиваем значение count в state
+      this.state.increaseCartCount(id);
+
+      // перерисовываем count
+      this.cartView.renderCartCount(this.state.shoppingCart[id]);
+
+      // удаляем старое значение кол-ва товаров в корзине из view
+      this.shoppingCartView.removeShoppingCartValue();
+
+      // перерисовываем общее кол-во товаров в корзине
+      this.renderShoppingCartValue();
+
+      // перерисовываем final price
+      this.cartView.renderCartFinalPrice(this.state.shoppingCart[id]);
+    }
+
+    decreaseClickHandler(id) {
+      // уменьшаем значение count в state
+      this.state.decreaseCartCount(id);
+
+      // перерисовываем count
+      this.cartView.renderCartCount(this.state.shoppingCart[id]);
+
+      // удаляем старое значение кол-ва товаров в корзине из view
+      this.shoppingCartView.removeShoppingCartValue();
+
+      // перерисовываем общее кол-во товаров в корзине
+      this.renderShoppingCartValue();
+
+      // перерисовываем final price
+      this.cartView.renderCartFinalPrice(this.state.shoppingCart[id]);
+    }
+
+    deleteClickHandler(id) {
+      // удаляем товар из shoppingCart в state
+      this.state.deleteGoodFromShoppingCart(id);
+
+      // удаляем старое значение кол-ва товаров в корзине из view
+      this.shoppingCartView.removeShoppingCartValue();
+
+      // перерисовываем общее кол-во товаров в корзине
+      this.renderShoppingCartValue();
+
+      // перерисовываем корзину товаров
+      this.renderCart();
     }
   }
 
   const state = new State(catalogData);
   const catalogPresenter = new CatalogPresenter(state, catalogView, popup, shoppingCart, pagination, filters, sort);
-  const cartPresenter = new CartPresenter(state, cart);
+  const cartPresenter = new CartPresenter(state, shoppingCart, cart);
 
   catalogPresenter.init();
   cartPresenter.init();

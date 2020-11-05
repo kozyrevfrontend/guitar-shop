@@ -16,12 +16,12 @@ export function createShoppingCartTemplate(card) {
       </div>
       <p class="cart__catalog-price">${card.price} ₽</p>
         <div class="cart__count">
-          <button class="cart__count-decrease">-</button>
-          <p class="cart__count-value"><span>1</span></p>
-          <button class="cart__count-increase">+</button>
+          <button class="cart__count-decrease" data-id="${card.articule}">-</button>
+          <p class="cart__count-value" data-id="${card.articule}"></p>
+          <button class="cart__count-increase" data-id="${card.articule}">+</button>
         </div>
-        <p class="cart__final-price">${card.price} ₽</p>
-        <button class="cart__button-close" aria-label="Удалить товар из корзины">
+        <p class="cart__final-price" data-id="${card.articule}"></p>
+        <button class="cart__button-close" data-id="${card.articule}" aria-label="Удалить товар из корзины">
           <svg width="18" height="18">
             <use href="img/sprite_auto.svg#icon-cross"></use>
           </svg>

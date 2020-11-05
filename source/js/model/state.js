@@ -16,7 +16,7 @@ export class State {
       flow: null
     };
 
-    this.shoppingCart = {};
+    this.shoppingCart = JSON.parse(localStorage.getItem(`shoppingCart`)) || {};
 
     this.currentPage = 1;
 
@@ -26,23 +26,65 @@ export class State {
   }
 
   addGoodsInShoppingCart(id) {
+    if (this.shoppingCart[id]) {
+      this.shoppingCart[id].count++;
+      this.shoppingCart[id].finalPrice = this.shoppingCart[id].count * this.shoppingCart[id].price;
+      localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
+      return;
+    }
+
     const good = this.catalogData[id];
     const articule = good.articule;
+
+    good.count = 1;
+    good.finalPrice = good.count * good.price;
 
     this.shoppingCart[articule] = good;
 
     localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
   }
 
+  deleteGoodFromShoppingCart(id) {
+    if (this.shoppingCart[id]) {
+      delete this.shoppingCart[id];
+      localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
+    }
+  }
+
   getCartFromLocalStorage() {
     if (localStorage.getItem(`shoppingCart`)) {
       return Object.values(JSON.parse(localStorage.getItem(`shoppingCart`)));
     }
-    return {};
+    return Object.values({});
+  }
+
+  increaseCartCount(id) {
+    this.shoppingCart[id].count++;
+    this.shoppingCart[id].finalPrice = this.shoppingCart[id].count * this.shoppingCart[id].price;
+    localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
+  }
+
+  decreaseCartCount(id) {
+    if (this.shoppingCart[id].count > 1) {
+      this.shoppingCart[id].count--;
+      this.shoppingCart[id].finalPrice = this.shoppingCart[id].count * this.shoppingCart[id].price;
+      localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
+    }
   }
 
   countGoodsInShoppingCart() {
-    return this.getCartFromLocalStorage().length;
+    const goods = this.getCartFromLocalStorage();
+    if (goods.length > 0) {
+      let summ = null;
+
+      goods.forEach((good) => {
+        summ += good.count;
+      });
+
+      return summ;
+    }
+
+    return goods.length;
   }
 
   clearFilters() {

@@ -1,4 +1,4 @@
-export function renderElement(parentElement, template, place = `beforeEnd`) {
+export function renderElement(parentElement, template, place = `beforeend`) {
   parentElement.insertAdjacentHTML(place, template);
 }
 
