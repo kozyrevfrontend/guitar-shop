@@ -1,8 +1,9 @@
 export class CartPresenter {
-  constructor(state, shoppingCartView, cartView) {
+  constructor(state, shoppingCartView, cartView, totalPriceView) {
     this.state = state;
     this.shoppingCartView = shoppingCartView;
     this.cartView = cartView;
+    this.totalPriceView = totalPriceView;
 
     this.increaseClickHandler = this.increaseClickHandler.bind(this);
     this.decreaseClickHandler = this.decreaseClickHandler.bind(this);
@@ -15,6 +16,8 @@ export class CartPresenter {
     this.renderShoppingCartValue();
 
     this.renderCart();
+
+    this.renderShoppingCartTotalPrice();
   }
 
   renderCart() {
@@ -23,6 +26,10 @@ export class CartPresenter {
 
   renderShoppingCartValue() {
     this.shoppingCartView.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
+  }
+
+  renderShoppingCartTotalPrice() {
+    this.totalPriceView.renderTotalPrice(this.state.getShoppingCartTotalPrice());
   }
 
   increaseClickHandler(id) {
@@ -40,6 +47,9 @@ export class CartPresenter {
 
     // перерисовываем final price
     this.cartView.renderCartFinalPrice(this.state.shoppingCart[id]);
+
+    // перерисовываем total price
+    this.renderShoppingCartTotalPrice();
   }
 
   decreaseClickHandler(id) {
@@ -57,6 +67,9 @@ export class CartPresenter {
 
     // перерисовываем final price
     this.cartView.renderCartFinalPrice(this.state.shoppingCart[id]);
+
+    // перерисовываем total price
+    this.renderShoppingCartTotalPrice();
   }
 
   deleteClickHandler(id) {

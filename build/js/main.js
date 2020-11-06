@@ -285,6 +285,53 @@
       this.catalogItemsPerPage = 9;
 
       this.itemsOffset = 0;
+
+      this.promo = {
+        gitarahit: {
+          discountPercentage: 0.1,
+          discountRoubles: 0,
+          discountLimit: 0
+        },
+        supergitara: {
+          discountPercentage: 0,
+          discountRoubles: 700,
+          discountLimit: 0
+        },
+        gitara2020: {
+          discountPercentage: 0,
+          discountRoubles: 3500,
+          discountLimit: 0.3
+        }
+      };
+
+      this.usersPromoCode = `gitarahit`;
+    }
+
+    getShoppingCartTotalPrice() {
+      const goods = Object.values(this.shoppingCart);
+      const promo = this.usersPromoCode;
+
+      if (goods.length > 0) {
+        let totalPrice = null;
+
+        goods.forEach((item) => {
+          totalPrice += item.finalPrice;
+        });
+
+        if (this.usersPromoCode !== null) {
+          let discount = totalPrice * this.promo[promo].discountPercentage + this.promo[promo].discountRoubles;
+
+          if (promo === `gitara2020` && (discount / totalPrice > this.promo[promo].discountLimit)) {
+            discount = totalPrice * this.promo[promo].discountLimit;
+          }
+
+          totalPrice -= discount;
+        }
+
+        return totalPrice;
+      }
+
+      return 0;
     }
 
     addGoodsInShoppingCart(id) {
@@ -1155,7 +1202,7 @@
     return `<span>${card.count}</span>`;
   }
 
-  function createCartTotalPriceTemplate(card) {
+  function createShoppingCartFinalPriceTemplate(card) {
     return `<span>${card.finalPrice} ₽</span>`;
   }
 
@@ -1163,7 +1210,7 @@
     constructor(markups, utils) {
       this.createShoppingCartTemplate = markups.createShoppingCartTemplate;
       this.createShoppingCartCountTemplate = markups.createShoppingCartCountTemplate;
-      this.createCartTotalPriceTemplate = markups.createCartTotalPriceTemplate;
+      this.createShoppingCartFinalPriceTemplate = markups.createShoppingCartFinalPriceTemplate;
       this.renderElement = utils.renderElement;
       this.deleteChildrenElements = utils.deleteChildrenElements;
     }
@@ -1233,7 +1280,7 @@
 
       this.deleteChildrenElements(finalPrice);
 
-      this.renderElement(finalPrice, this.createCartTotalPriceTemplate(data));
+      this.renderElement(finalPrice, this.createShoppingCartFinalPriceTemplate(data));
     }
   }
 
@@ -1241,6 +1288,36 @@
     {
       createShoppingCartTemplate,
       createShoppingCartCountTemplate,
+      createShoppingCartFinalPriceTemplate
+    },
+    {
+      renderElement,
+      deleteChildrenElements
+    }
+  );
+
+  function createCartTotalPriceTemplate(totalPrice) {
+    return `<span>Всего: ${totalPrice} ₽</span>`;
+  }
+
+  class TotalPrice {
+    constructor(markups, utils) {
+      this.createCartTotalPriceTemplate = markups.createCartTotalPriceTemplate;
+      this.renderElement = utils.renderElement;
+      this.deleteChildrenElements = utils.deleteChildrenElements;
+    }
+
+    renderTotalPrice(totalPrice) {
+      const totalPricecontainer = document.querySelector(`.total-price`);
+
+      this.deleteChildrenElements(totalPricecontainer);
+
+      this.renderElement(totalPricecontainer, this.createCartTotalPriceTemplate(totalPrice));
+    }
+  }
+
+  const totalPrice = new TotalPrice(
+    {
       createCartTotalPriceTemplate
     },
     {
@@ -1250,10 +1327,11 @@
   );
 
   class CartPresenter {
-    constructor(state, shoppingCartView, cartView) {
+    constructor(state, shoppingCartView, cartView, totalPriceView) {
       this.state = state;
       this.shoppingCartView = shoppingCartView;
       this.cartView = cartView;
+      this.totalPriceView = totalPriceView;
 
       this.increaseClickHandler = this.increaseClickHandler.bind(this);
       this.decreaseClickHandler = this.decreaseClickHandler.bind(this);
@@ -1266,6 +1344,8 @@
       this.renderShoppingCartValue();
 
       this.renderCart();
+
+      this.renderShoppingCartTotalPrice();
     }
 
     renderCart() {
@@ -1274,6 +1354,10 @@
 
     renderShoppingCartValue() {
       this.shoppingCartView.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
+    }
+
+    renderShoppingCartTotalPrice() {
+      this.totalPriceView.renderTotalPrice(this.state.getShoppingCartTotalPrice());
     }
 
     increaseClickHandler(id) {
@@ -1291,6 +1375,9 @@
 
       // перерисовываем final price
       this.cartView.renderCartFinalPrice(this.state.shoppingCart[id]);
+
+      // перерисовываем total price
+      this.renderShoppingCartTotalPrice();
     }
 
     decreaseClickHandler(id) {
@@ -1308,6 +1395,9 @@
 
       // перерисовываем final price
       this.cartView.renderCartFinalPrice(this.state.shoppingCart[id]);
+
+      // перерисовываем total price
+      this.renderShoppingCartTotalPrice();
     }
 
     deleteClickHandler(id) {
@@ -1327,7 +1417,7 @@
 
   const state = new State(catalogData);
   const catalogPresenter = new CatalogPresenter(state, catalogView, popup, shoppingCart, pagination, filters, sort);
-  const cartPresenter = new CartPresenter(state, shoppingCart, cart);
+  const cartPresenter = new CartPresenter(state, shoppingCart, cart, totalPrice);
 
   catalogPresenter.init();
   cartPresenter.init();

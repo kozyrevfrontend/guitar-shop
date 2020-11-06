@@ -1,6 +1,6 @@
 import { createShoppingCartTemplate } from './markups/createShoppingCartTemplate';
 import { createShoppingCartCountTemplate } from './markups/createShoppingCartCountTemplate';
-import { createCartTotalPriceTemplate } from './markups/createCartFinalPriceTemplate';
+import { createShoppingCartFinalPriceTemplate } from './markups/createShoppingCartFinalPriceTemplate';
 import { renderElement } from '../utils';
 import { deleteChildrenElements } from '../utils';
 
@@ -8,7 +8,7 @@ class Cart {
   constructor(markups, utils) {
     this.createShoppingCartTemplate = markups.createShoppingCartTemplate;
     this.createShoppingCartCountTemplate = markups.createShoppingCartCountTemplate;
-    this.createCartTotalPriceTemplate = markups.createCartTotalPriceTemplate;
+    this.createShoppingCartFinalPriceTemplate = markups.createShoppingCartFinalPriceTemplate;
     this.renderElement = utils.renderElement;
     this.deleteChildrenElements = utils.deleteChildrenElements;
   }
@@ -78,7 +78,7 @@ class Cart {
 
     this.deleteChildrenElements(finalPrice);
 
-    this.renderElement(finalPrice, this.createCartTotalPriceTemplate(data));
+    this.renderElement(finalPrice, this.createShoppingCartFinalPriceTemplate(data));
   }
 }
 
@@ -86,7 +86,7 @@ export const cart = new Cart(
   {
     createShoppingCartTemplate,
     createShoppingCartCountTemplate,
-    createCartTotalPriceTemplate
+    createShoppingCartFinalPriceTemplate
   },
   {
     renderElement,

@@ -23,6 +23,53 @@ export class State {
     this.catalogItemsPerPage = 9;
 
     this.itemsOffset = 0;
+
+    this.promo = {
+      gitarahit: {
+        discountPercentage: 0.1,
+        discountRoubles: 0,
+        discountLimit: 0
+      },
+      supergitara: {
+        discountPercentage: 0,
+        discountRoubles: 700,
+        discountLimit: 0
+      },
+      gitara2020: {
+        discountPercentage: 0,
+        discountRoubles: 3500,
+        discountLimit: 0.3
+      }
+    };
+
+    this.usersPromoCode = `gitarahit`;
+  }
+
+  getShoppingCartTotalPrice() {
+    const goods = Object.values(this.shoppingCart);
+    const promo = this.usersPromoCode;
+
+    if (goods.length > 0) {
+      let totalPrice = null;
+
+      goods.forEach((item) => {
+        totalPrice += item.finalPrice;
+      });
+
+      if (this.usersPromoCode !== null) {
+        let discount = totalPrice * this.promo[promo].discountPercentage + this.promo[promo].discountRoubles;
+
+        if (promo === `gitara2020` && (discount / totalPrice > this.promo[promo].discountLimit)) {
+          discount = totalPrice * this.promo[promo].discountLimit;
+        }
+
+        totalPrice -= discount;
+      }
+
+      return totalPrice;
+    }
+
+    return 0;
   }
 
   addGoodsInShoppingCart(id) {
