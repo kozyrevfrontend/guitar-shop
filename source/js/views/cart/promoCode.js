@@ -1,4 +1,14 @@
+import { createDiscountMessageTemplate } from './markups/createDiscountMessageTemplate';
+import { renderElement } from '../utils';
+import { deleteChildrenElements } from '../utils';
+
 class PromoCode {
+  constructor(markups, utils) {
+    this.createDiscountMessageTemplate = markups.createDiscountMessageTemplate;
+    this.renderElement = utils.renderElement;
+    this.deleteChildrenElements = utils.deleteChildrenElements;
+  }
+
   usePromoCode(submitHandler) {
     const form = document.querySelector(`.discount__form`);
 
@@ -19,6 +29,31 @@ class PromoCode {
       });
     }
   }
+
+  renderMessage() {
+    const form = document.querySelector(`.discount__form`);
+
+    if (form) {
+      renderElement(form, this.createDiscountMessageTemplate());
+    }
+  }
+
+  removeMessage() {
+    const form = document.querySelector(`.discount__form`);
+    const message = form.querySelector(`.discount__message`);
+
+    if (form) {
+      form.removeChild(message);
+    }
+  }
 }
 
-export const promoCode = new PromoCode();
+export const promoCode = new PromoCode(
+  {
+    createDiscountMessageTemplate
+  },
+  {
+    renderElement,
+    deleteChildrenElements
+  }
+);

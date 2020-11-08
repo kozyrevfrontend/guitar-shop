@@ -14,7 +14,7 @@ export function createShoppingCartTemplate(card) {
           </picture>
         </div>
       </div>
-      <p class="cart__catalog-price">${card.price} ₽</p>
+      <p class="cart__catalog-price">${card.price.toLocaleString(`ru-RU`)} ₽</p>
         <div class="cart__count">
           <button class="cart__count-decrease" data-id="${card.articule}">-</button>
           <p class="cart__count-value" data-id="${card.articule}"></p>

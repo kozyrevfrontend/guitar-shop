@@ -1,3 +1,3 @@
 export function createShoppingCartFinalPriceTemplate(card) {
-  return `<span>${card.finalPrice} ₽</span>`;
+  return `<span>${card.finalPrice.toLocaleString(`ru-RU`)} ₽</span>`;
 }

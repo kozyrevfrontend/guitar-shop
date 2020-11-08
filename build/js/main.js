@@ -1194,7 +1194,7 @@
           </picture>
         </div>
       </div>
-      <p class="cart__catalog-price">${card.price} ₽</p>
+      <p class="cart__catalog-price">${card.price.toLocaleString(`ru-RU`)} ₽</p>
         <div class="cart__count">
           <button class="cart__count-decrease" data-id="${card.articule}">-</button>
           <p class="cart__count-value" data-id="${card.articule}"></p>
@@ -1215,7 +1215,7 @@
   }
 
   function createShoppingCartFinalPriceTemplate(card) {
-    return `<span>${card.finalPrice} ₽</span>`;
+    return `<span>${card.finalPrice.toLocaleString(`ru-RU`)} ₽</span>`;
   }
 
   class Cart {
@@ -1308,7 +1308,17 @@
     }
   );
 
+  function createDiscountMessageTemplate() {
+    return `<span class="discount__message">Упс, такого купона не существует :(</span>`;
+  }
+
   class PromoCode {
+    constructor(markups, utils) {
+      this.createDiscountMessageTemplate = markups.createDiscountMessageTemplate;
+      this.renderElement = utils.renderElement;
+      this.deleteChildrenElements = utils.deleteChildrenElements;
+    }
+
     usePromoCode(submitHandler) {
       const form = document.querySelector(`.discount__form`);
 
@@ -1329,12 +1339,37 @@
         });
       }
     }
+
+    renderMessage() {
+      const form = document.querySelector(`.discount__form`);
+
+      if (form) {
+        renderElement(form, this.createDiscountMessageTemplate());
+      }
+    }
+
+    removeMessage() {
+      const form = document.querySelector(`.discount__form`);
+      const message = form.querySelector(`.discount__message`);
+
+      if (form) {
+        form.removeChild(message);
+      }
+    }
   }
 
-  const promoCode = new PromoCode();
+  const promoCode = new PromoCode(
+    {
+      createDiscountMessageTemplate
+    },
+    {
+      renderElement,
+      deleteChildrenElements
+    }
+  );
 
   function createCartTotalPriceTemplate(totalPrice) {
-    return `<span>Всего: ${totalPrice} ₽</span>`;
+    return `<span>Всего: ${totalPrice.toLocaleString(`ru-RU`)} ₽</span>`;
   }
 
   class TotalPrice {
@@ -1345,7 +1380,7 @@
     }
 
     renderTotalPrice(totalPrice) {
-      const totalPricecontainer = document.querySelector(`.total-price`);
+      const totalPricecontainer = document.querySelector(`.order__total-price`);
 
       if (totalPricecontainer) {
         this.deleteChildrenElements(totalPricecontainer);
@@ -1470,7 +1505,9 @@
 
       // проверяем промо-код; если не подходит - отрисовываем сообщение пользователю
       if (!this.state.validateUsersPromoCode()) {
-        console.log(`Такого промокода не существует!`);
+        this.promoCodeView.renderMessage();
+      } else {
+        this.promoCodeView.removeMessage();
       }
 
       // перерисовываем total price с учетом скидки

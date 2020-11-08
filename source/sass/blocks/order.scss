@@ -1,0 +1,43 @@
+.order {
+  margin-bottom: 30px;
+
+  text-align: right;
+}
+
+.order__total-price {
+  margin: 0;
+  margin-bottom: 44px;
+  padding-right: 8px;
+
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  color: #000000;
+}
+
+.order__link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 220px;
+  height: 36px;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+
+  background-color: #e27f00;
+  border-radius: 2px;
+
+  &:hover,
+  &:focus {
+    background-color: #ffa839;
+  }
+
+  &:active {
+    background-color: #da8b26;
+  }
+}

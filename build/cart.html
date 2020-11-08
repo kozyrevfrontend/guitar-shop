@@ -80,12 +80,21 @@
         <ul class="cart__list">
         </ul>
       </div>
-      <form class="discount__form" method="POST" action="https://echo.htmlacademy.ru">
-        <label class="visually-hidden" for="discount">Введите промокод:</label>
-        <input id="discount" type="text" name="discount" placeholder="GITARAHIT">
-        <button class="discount__button" type="submit">Применить промокод</button>
-      </form>
-      <p class="total-price"></p>
+      <div class="main__wrapper main__wrapper--cart">
+        <section class="discount">
+          <h2 class="discount__title">Промокод на скидку</h2>
+          <p class="discount__description">Введите свой промокод, если он у вас есть.</p>
+          <form class="discount__form" method="POST" action="https://echo.htmlacademy.ru">
+            <label class="visually-hidden" for="discount">Введите промокод:</label>
+            <input id="discount" type="text" name="discount" placeholder="GITARAHIT">
+            <button class="discount__button" type="submit"><span>Применить купон</span></button>
+          </form>
+        </section>
+        <div class="order">
+          <p class="order__total-price"></p>
+          <a class="order__link" href="#"><span>Оформить заказ</span></a>
+        </div>
+      </div>
     </main>
 
     <!--Footer-->

@@ -1,3 +1,7 @@
+.cart {
+  margin-bottom: 40px;
+}
+
 .cart__list {
   @include list-reset;
 }
@@ -17,8 +21,9 @@
 
 .cart__wrapper {
   display: flex;
+  min-width: 460px;
   padding-left: 4.7%;
-  margin-right: 11%;
+  margin-right: 6%;
 }
 
 .cart__image-wrapper {
@@ -63,14 +68,20 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 15px;
+  text-transform: capitalize;
   letter-spacing: 0.05em;
   color: #000000;
+
+  span {
+    text-transform: none;
+  }
 }
 
 .cart__catalog-price {
   align-self: center;
+  min-width: 100px;
   margin: 0;
-  margin-right: 9.3%;
+  margin-right: 7.7%;
   padding-top: 23px;
 
   font-size: 20px;
@@ -99,6 +110,16 @@
   background-color: #ffffff;
 
   cursor: pointer;
+
+  &:hover,
+  &:focus {
+    color: #000000;
+    border-color: #000000;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
 }
 
 .cart__count-value {

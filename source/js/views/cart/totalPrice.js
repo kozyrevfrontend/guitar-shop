@@ -10,7 +10,7 @@ class TotalPrice {
   }
 
   renderTotalPrice(totalPrice) {
-    const totalPricecontainer = document.querySelector(`.total-price`);
+    const totalPricecontainer = document.querySelector(`.order__total-price`);
 
     if (totalPricecontainer) {
       this.deleteChildrenElements(totalPricecontainer);

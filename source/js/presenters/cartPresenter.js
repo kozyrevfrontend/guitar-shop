@@ -103,7 +103,9 @@ export class CartPresenter {
 
     // проверяем промо-код; если не подходит - отрисовываем сообщение пользователю
     if (!this.state.validateUsersPromoCode()) {
-      console.log(`Такого промокода не существует!`);
+      this.promoCodeView.renderMessage();
+    } else {
+      this.promoCodeView.removeMessage();
     }
 
     // перерисовываем total price с учетом скидки
