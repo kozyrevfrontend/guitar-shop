@@ -648,11 +648,41 @@
     );
   }
 
+  function createPopupRemoveTemplate(card) {
+    return (
+    `<section class="popup-remove">
+    <h2 class="popup-remove__title">Удалить этот товар?</h2>
+    <div class="popup-remove__wrapper">
+      <picture>
+        <source type="image/webp" srcset="img/${card.image}@1x.webp 1x, img/${card.image}@2x.webp 2x">
+        <img src="img/${card.image}@1x.png" srcset="img/${card.image}@1x.png 2x" alt="${card.model}" width="48" height="124">
+      </picture>
+      <div class="popup-remove__description">
+        <h3 class="popup-remove__model">Гитара ${card.model}</h3>
+        <p class="popup-remove__articule">Артикул: ${card.articule}</p>
+        <p class="popup-remove__type">${card.type}, <span>${card.stringsNumber} струнная</span></p>
+        <p class="popup-remove__price">Цена: ${card.price.toLocaleString(`ru-RU`)} ₽</p>
+      </div>
+      <div class="popup-remove__wrapper-inner">
+        <button class="popup-remove__button" data-id="${card.articule}">Удалить товар</button>
+        <button class="popup-remove__continue">Продолжить покупки</button>
+      </div>
+      <button class="popup-remove__close" aria-label="Закрыть попап">
+        <svg width="18" height="18">
+          <use href="img/sprite_auto.svg#icon-cross"></use>
+        </svg>
+      </button>
+    </div>
+  </section>`
+    );
+  }
+
   class Popup {
     constructor(markups, utils) {
       this.createPopupTemplate = markups.createPopupTemplate;
       this.createAddPopupTemplate = markups.createAddPopupTemplate;
       this.createSuccessPopupTemplate = markups.createSuccessPopupTemplate;
+      this.createPopupRemoveTemplate = markups.createPopupRemoveTemplate;
 
       this.renderElement = utils.renderElement;
 
@@ -733,13 +763,40 @@
         this.closePopup();
       });
     }
+
+    renderRemovePopup(card, removeButtonClickHandler) {
+      this.renderPopupTemplate();
+
+      const popup = document.querySelector(`.popup`);
+      const popupOverlay = popup.querySelector(`.popup__overlay`);
+
+      this.renderElement(popupOverlay, this.createPopupRemoveTemplate(card));
+
+      const closeButton = popup.querySelector(`.popup-remove__close`);
+      const removeButton = popup.querySelector(`.popup-remove__button`);
+      const continueButton = popup.querySelector(`.popup-remove__continue`);
+
+      closeButton.addEventListener('click', () => {
+        this.closePopup();
+      });
+
+      removeButton.addEventListener(`click`, (evt) => {
+        removeButtonClickHandler(evt.currentTarget.dataset.id);
+        this.closePopup();
+      });
+
+      continueButton.addEventListener(`click`, () => {
+        this.closePopup();
+      });
+    }
   }
 
   const popup = new Popup(
     {
       createPopupTemplate,
       createAddPopupTemplate,
-      createSuccessPopupTemplate
+      createSuccessPopupTemplate,
+      createPopupRemoveTemplate
     },
     {
       renderElement
@@ -1227,7 +1284,7 @@
       this.deleteChildrenElements = utils.deleteChildrenElements;
     }
 
-    renderCart(cartData, decreaseClickHandler, increaseClickHandler, deleteClickHandler) {
+    renderCart(cartData, decreaseClickHandler, increaseClickHandler, closeClickHandler) {
       const cartList = document.querySelector(`.cart__list`);
 
       if (cartList) {
@@ -1255,13 +1312,13 @@
 
         const deleteHandler = (node) => {
           node.addEventListener(`click`, (evt) => {
-            deleteClickHandler(evt.currentTarget.dataset.id);
+            closeClickHandler(evt.currentTarget.dataset.id);
           });
         };
 
         const decreaseButtons = cartList.querySelectorAll(`.cart__count-decrease`);
         const increaseButtons = cartList.querySelectorAll(`.cart__count-increase`);
-        const deleteButtons = cartList.querySelectorAll(`.cart__button-close`);
+        const closeButtons = cartList.querySelectorAll(`.cart__button-close`);
 
         decreaseButtons.forEach((button) => {
           decreaseHandler(button);
@@ -1271,7 +1328,7 @@
           increaseHandler(button);
         });
 
-        deleteButtons.forEach((button) => {
+        closeButtons.forEach((button) => {
           deleteHandler(button);
         });
       }
@@ -1352,7 +1409,7 @@
       const form = document.querySelector(`.discount__form`);
       const message = form.querySelector(`.discount__message`);
 
-      if (form) {
+      if (message) {
         form.removeChild(message);
       }
     }
@@ -1401,16 +1458,18 @@
   );
 
   class CartPresenter {
-    constructor(state, shoppingCartView, cartView, promoCodeView, totalPriceView) {
+    constructor(state, shoppingCartView, cartView, promoCodeView, totalPriceView, popupView) {
       this.state = state;
       this.shoppingCartView = shoppingCartView;
       this.cartView = cartView;
       this.promoCodeView = promoCodeView;
       this.totalPriceView = totalPriceView;
+      this.popupView = popupView;
 
       this.increaseClickHandler = this.increaseClickHandler.bind(this);
       this.decreaseClickHandler = this.decreaseClickHandler.bind(this);
-      this.deleteClickHandler = this.deleteClickHandler.bind(this);
+      this.closeClickHandler = this.closeClickHandler.bind(this);
+      this.removeClickHandler = this.removeClickHandler.bind(this);
       this.submitClickHandler = this.submitClickHandler.bind(this);
     }
 
@@ -1427,7 +1486,7 @@
     }
 
     renderCart() {
-      this.cartView.renderCart(this.state.getCartFromLocalStorage(), this.decreaseClickHandler, this.increaseClickHandler, this.deleteClickHandler);
+      this.cartView.renderCart(this.state.getCartFromLocalStorage(), this.decreaseClickHandler, this.increaseClickHandler, this.closeClickHandler);
     }
 
     renderShoppingCartValue() {
@@ -1482,7 +1541,11 @@
       this.renderShoppingCartTotalPrice();
     }
 
-    deleteClickHandler(id) {
+    closeClickHandler(id) {
+      this.popupView.renderRemovePopup(this.state.shoppingCart[id], this.removeClickHandler);
+    }
+
+    removeClickHandler(id) {
       // удаляем товар из shoppingCart в state
       this.state.deleteGoodFromShoppingCart(id);
 
@@ -1517,7 +1580,7 @@
 
   const state = new State(catalogData);
   const catalogPresenter = new CatalogPresenter(state, catalogView, popup, shoppingCart, pagination, filters, sort);
-  const cartPresenter = new CartPresenter(state, shoppingCart, cart, promoCode, totalPrice);
+  const cartPresenter = new CartPresenter(state, shoppingCart, cart, promoCode, totalPrice, popup);
 
   catalogPresenter.init();
   cartPresenter.init();

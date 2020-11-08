@@ -42,7 +42,7 @@ class PromoCode {
     const form = document.querySelector(`.discount__form`);
     const message = form.querySelector(`.discount__message`);
 
-    if (form) {
+    if (message) {
       form.removeChild(message);
     }
   }

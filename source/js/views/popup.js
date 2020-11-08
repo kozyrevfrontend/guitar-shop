@@ -1,6 +1,7 @@
 import { createPopupTemplate } from './markups/createPopupTemplate';
 import { createAddPopupTemplate } from './catalog/markups/createAddPopupTemplate';
 import { createSuccessPopupTemplate } from './catalog/markups/createSuccessPopupTemplate';
+import { createPopupRemoveTemplate } from './cart/markups/createPopupRemoveTemplate';
 import { renderElement } from './utils';
 
 class Popup {
@@ -8,6 +9,7 @@ class Popup {
     this.createPopupTemplate = markups.createPopupTemplate;
     this.createAddPopupTemplate = markups.createAddPopupTemplate;
     this.createSuccessPopupTemplate = markups.createSuccessPopupTemplate;
+    this.createPopupRemoveTemplate = markups.createPopupRemoveTemplate;
 
     this.renderElement = utils.renderElement;
 
@@ -88,13 +90,40 @@ class Popup {
       this.closePopup();
     });
   }
+
+  renderRemovePopup(card, removeButtonClickHandler) {
+    this.renderPopupTemplate();
+
+    const popup = document.querySelector(`.popup`);
+    const popupOverlay = popup.querySelector(`.popup__overlay`);
+
+    this.renderElement(popupOverlay, this.createPopupRemoveTemplate(card));
+
+    const closeButton = popup.querySelector(`.popup-remove__close`);
+    const removeButton = popup.querySelector(`.popup-remove__button`);
+    const continueButton = popup.querySelector(`.popup-remove__continue`);
+
+    closeButton.addEventListener('click', () => {
+      this.closePopup();
+    });
+
+    removeButton.addEventListener(`click`, (evt) => {
+      removeButtonClickHandler(evt.currentTarget.dataset.id);
+      this.closePopup();
+    });
+
+    continueButton.addEventListener(`click`, () => {
+      this.closePopup();
+    });
+  }
 }
 
 export const popup = new Popup(
   {
     createPopupTemplate,
     createAddPopupTemplate,
-    createSuccessPopupTemplate
+    createSuccessPopupTemplate,
+    createPopupRemoveTemplate
   },
   {
     renderElement

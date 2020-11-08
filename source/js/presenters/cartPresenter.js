@@ -1,14 +1,16 @@
 export class CartPresenter {
-  constructor(state, shoppingCartView, cartView, promoCodeView, totalPriceView) {
+  constructor(state, shoppingCartView, cartView, promoCodeView, totalPriceView, popupView) {
     this.state = state;
     this.shoppingCartView = shoppingCartView;
     this.cartView = cartView;
     this.promoCodeView = promoCodeView;
     this.totalPriceView = totalPriceView;
+    this.popupView = popupView;
 
     this.increaseClickHandler = this.increaseClickHandler.bind(this);
     this.decreaseClickHandler = this.decreaseClickHandler.bind(this);
-    this.deleteClickHandler = this.deleteClickHandler.bind(this);
+    this.closeClickHandler = this.closeClickHandler.bind(this);
+    this.removeClickHandler = this.removeClickHandler.bind(this);
     this.submitClickHandler = this.submitClickHandler.bind(this);
   }
 
@@ -25,7 +27,7 @@ export class CartPresenter {
   }
 
   renderCart() {
-    this.cartView.renderCart(this.state.getCartFromLocalStorage(), this.decreaseClickHandler, this.increaseClickHandler, this.deleteClickHandler);
+    this.cartView.renderCart(this.state.getCartFromLocalStorage(), this.decreaseClickHandler, this.increaseClickHandler, this.closeClickHandler);
   }
 
   renderShoppingCartValue() {
@@ -80,7 +82,11 @@ export class CartPresenter {
     this.renderShoppingCartTotalPrice();
   }
 
-  deleteClickHandler(id) {
+  closeClickHandler(id) {
+    this.popupView.renderRemovePopup(this.state.shoppingCart[id], this.removeClickHandler);
+  }
+
+  removeClickHandler(id) {
     // удаляем товар из shoppingCart в state
     this.state.deleteGoodFromShoppingCart(id);
 

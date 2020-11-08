@@ -13,7 +13,7 @@ class Cart {
     this.deleteChildrenElements = utils.deleteChildrenElements;
   }
 
-  renderCart(cartData, decreaseClickHandler, increaseClickHandler, deleteClickHandler) {
+  renderCart(cartData, decreaseClickHandler, increaseClickHandler, closeClickHandler) {
     const cartList = document.querySelector(`.cart__list`);
 
     if (cartList) {
@@ -41,13 +41,13 @@ class Cart {
 
       const deleteHandler = (node) => {
         node.addEventListener(`click`, (evt) => {
-          deleteClickHandler(evt.currentTarget.dataset.id);
+          closeClickHandler(evt.currentTarget.dataset.id);
         });
       };
 
       const decreaseButtons = cartList.querySelectorAll(`.cart__count-decrease`);
       const increaseButtons = cartList.querySelectorAll(`.cart__count-increase`);
-      const deleteButtons = cartList.querySelectorAll(`.cart__button-close`);
+      const closeButtons = cartList.querySelectorAll(`.cart__button-close`);
 
       decreaseButtons.forEach((button) => {
         decreaseHandler(button);
@@ -57,7 +57,7 @@ class Cart {
         increaseHandler(button);
       });
 
-      deleteButtons.forEach((button) => {
+      closeButtons.forEach((button) => {
         deleteHandler(button);
       });
     }

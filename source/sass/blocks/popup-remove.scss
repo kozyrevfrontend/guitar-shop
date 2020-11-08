@@ -1,0 +1,174 @@
+.popup-remove {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 740px;
+  padding-left: 54px;
+  padding-right: 50px;
+  padding-top: 31px;
+  padding-bottom: 34px;
+
+  background-color: #ffffff;
+  box-shadow: 0 5px 6px rgba(63, 63, 63, 0.2);
+
+  border-radius: 4px;
+
+  transform: translate(-50%, -50%);
+}
+
+.popup-remove__wrapper {
+  position: relative;
+
+  display: flex;
+}
+
+.popup-remove__wrapper-inner {
+  margin-left: auto;
+}
+
+.popup-remove__title {
+  margin: 0;
+  margin-bottom: 23px;
+
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0.02em;
+  color: #474747;
+}
+
+.popup-remove__description {
+  margin-left: 45px;
+  padding-top: 16px;
+}
+
+.popup-remove__model {
+  margin: 0;
+  margin-bottom: 14px;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000000;
+}
+
+.popup-remove__articule {
+  margin: 0;
+  margin-bottom: 6px;
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  color: #000000;
+}
+
+.popup-remove__type {
+  margin: 0;
+  margin-bottom: 20px;
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  text-transform: capitalize;
+  color: #000000;
+
+  span {
+    text-transform: none;
+  }
+}
+
+.popup-remove__price {
+  margin: 0;
+
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  color: #000000;
+}
+
+.popup-remove__button {
+  display: block;
+  min-width: 220px;
+  height: 46px;
+  margin-left: auto;
+  margin-top: 16px;
+  margin-bottom: 16px;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+
+  background-color: #e27f00;
+
+  border: none;
+  border-radius: 2px;
+
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: #ffa839;
+  }
+
+  &:active {
+    background-color: #da8b26;
+  }
+}
+
+.popup-remove__close {
+  position: absolute;
+  top: -49px;
+  right: -36px;
+
+  display: block;
+
+  border: none;
+  background-color: transparent;
+
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    opacity: 0.8;
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+.popup-remove__continue {
+  display: block;
+  width: 220px;
+  height: 46px;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 15px;
+  letter-spacing: 0.05em;
+  color: #585757;
+
+  background-color: #ffffff;
+
+  border: 1px solid #585757;
+  border-radius: 2px;
+
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    opacity: 0.7;
+  }
+
+  &:active {
+    opacity: 0.5;
+  }
+}

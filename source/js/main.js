@@ -15,7 +15,7 @@ import { CartPresenter } from './presenters/cartPresenter';
 
 const state = new State(catalogData);
 const catalogPresenter = new CatalogPresenter(state, catalogView, popup, shoppingCart, pagination, filters, sort);
-const cartPresenter = new CartPresenter(state, shoppingCart, cart, promoCode, totalPrice);
+const cartPresenter = new CartPresenter(state, shoppingCart, cart, promoCode, totalPrice, popup);
 
 catalogPresenter.init();
 cartPresenter.init();

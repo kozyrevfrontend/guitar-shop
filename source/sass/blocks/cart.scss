@@ -137,6 +137,8 @@
 }
 
 .cart__final-price {
+  display: block;
+  min-width: 100px;
   align-self: center;
   margin: 0;
   margin-left: auto;
@@ -146,6 +148,7 @@
   font-weight: 700;
   line-height: 15px;
   letter-spacing: 0.05em;
+  text-align: right;
   color: #000000;
 }
 
