@@ -80,6 +80,10 @@ export class CartPresenter {
 
     // перерисовываем total price
     this.renderShoppingCartTotalPrice();
+
+    if (this.state.shoppingCart[id].count === 1) {
+      this.popupView.renderRemovePopup(this.state.shoppingCart[id], this.removeClickHandler);
+    }
   }
 
   closeClickHandler(id) {
