@@ -9,12 +9,13 @@ import { sort } from './views/catalog/sort';
 import { CatalogPresenter } from './presenters/catalogPresenter';
 
 import { cart } from './views/cart/cart';
+import { promoCode } from './views/cart/promoCode';
 import { totalPrice } from './views/cart/totalPrice';
 import { CartPresenter } from './presenters/cartPresenter';
 
 const state = new State(catalogData);
 const catalogPresenter = new CatalogPresenter(state, catalogView, popup, shoppingCart, pagination, filters, sort);
-const cartPresenter = new CartPresenter(state, shoppingCart, cart, totalPrice);
+const cartPresenter = new CartPresenter(state, shoppingCart, cart, promoCode, totalPrice);
 
 catalogPresenter.init();
 cartPresenter.init();

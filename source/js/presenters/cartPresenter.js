@@ -1,13 +1,15 @@
 export class CartPresenter {
-  constructor(state, shoppingCartView, cartView, totalPriceView) {
+  constructor(state, shoppingCartView, cartView, promoCodeView, totalPriceView) {
     this.state = state;
     this.shoppingCartView = shoppingCartView;
     this.cartView = cartView;
+    this.promoCodeView = promoCodeView;
     this.totalPriceView = totalPriceView;
 
     this.increaseClickHandler = this.increaseClickHandler.bind(this);
     this.decreaseClickHandler = this.decreaseClickHandler.bind(this);
     this.deleteClickHandler = this.deleteClickHandler.bind(this);
+    this.submitClickHandler = this.submitClickHandler.bind(this);
   }
 
   init() {
@@ -16,6 +18,8 @@ export class CartPresenter {
     this.renderShoppingCartValue();
 
     this.renderCart();
+
+    this.usePromoCode();
 
     this.renderShoppingCartTotalPrice();
   }
@@ -26,6 +30,10 @@ export class CartPresenter {
 
   renderShoppingCartValue() {
     this.shoppingCartView.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
+  }
+
+  usePromoCode() {
+    this.promoCodeView.usePromoCode(this.submitClickHandler);
   }
 
   renderShoppingCartTotalPrice() {
@@ -84,5 +92,21 @@ export class CartPresenter {
 
     // перерисовываем корзину товаров
     this.renderCart();
+
+    // перерисовываем total price
+    this.renderShoppingCartTotalPrice();
+  }
+
+  submitClickHandler(code) {
+    // записываем введённый промо-код в state
+    this.state.setUsersPromoCode(code);
+
+    // проверяем промо-код; если не подходит - отрисовываем сообщение пользователю
+    if (!this.state.validateUsersPromoCode()) {
+      console.log(`Такого промокода не существует!`);
+    }
+
+    // перерисовываем total price с учетом скидки
+    this.renderShoppingCartTotalPrice();
   }
 }

@@ -28,12 +28,12 @@ export class State {
       gitarahit: {
         discountPercentage: 0.1,
         discountRoubles: 0,
-        discountLimit: 0
+        discountLimit: 1
       },
       supergitara: {
         discountPercentage: 0,
         discountRoubles: 700,
-        discountLimit: 0
+        discountLimit: 1
       },
       gitara2020: {
         discountPercentage: 0,
@@ -42,7 +42,19 @@ export class State {
       }
     };
 
-    this.usersPromoCode = `gitarahit`;
+    this.usersPromoCode = null;
+  }
+
+  setUsersPromoCode(code) {
+    this.usersPromoCode = code;
+  }
+
+  validateUsersPromoCode() {
+    if (!this.promo[this.usersPromoCode] && this.usersPromoCode !== null) {
+      return false;
+    }
+
+    return true;
   }
 
   getShoppingCartTotalPrice() {
@@ -56,10 +68,10 @@ export class State {
         totalPrice += item.finalPrice;
       });
 
-      if (this.usersPromoCode !== null) {
+      if (this.promo[this.usersPromoCode] && this.usersPromoCode !== null) {
         let discount = totalPrice * this.promo[promo].discountPercentage + this.promo[promo].discountRoubles;
 
-        if (promo === `gitara2020` && (discount / totalPrice > this.promo[promo].discountLimit)) {
+        if (discount / totalPrice > this.promo[promo].discountLimit) {
           discount = totalPrice * this.promo[promo].discountLimit;
         }
 

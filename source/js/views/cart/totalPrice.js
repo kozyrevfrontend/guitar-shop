@@ -12,9 +12,11 @@ class TotalPrice {
   renderTotalPrice(totalPrice) {
     const totalPricecontainer = document.querySelector(`.total-price`);
 
-    this.deleteChildrenElements(totalPricecontainer);
+    if (totalPricecontainer) {
+      this.deleteChildrenElements(totalPricecontainer);
 
-    this.renderElement(totalPricecontainer, this.createCartTotalPriceTemplate(totalPrice));
+      this.renderElement(totalPricecontainer, this.createCartTotalPriceTemplate(totalPrice));
+    }
   }
 }
 

@@ -290,12 +290,12 @@
         gitarahit: {
           discountPercentage: 0.1,
           discountRoubles: 0,
-          discountLimit: 0
+          discountLimit: 1
         },
         supergitara: {
           discountPercentage: 0,
           discountRoubles: 700,
-          discountLimit: 0
+          discountLimit: 1
         },
         gitara2020: {
           discountPercentage: 0,
@@ -304,7 +304,19 @@
         }
       };
 
-      this.usersPromoCode = `gitarahit`;
+      this.usersPromoCode = null;
+    }
+
+    setUsersPromoCode(code) {
+      this.usersPromoCode = code;
+    }
+
+    validateUsersPromoCode() {
+      if (!this.promo[this.usersPromoCode] && this.usersPromoCode !== null) {
+        return false;
+      }
+
+      return true;
     }
 
     getShoppingCartTotalPrice() {
@@ -318,10 +330,10 @@
           totalPrice += item.finalPrice;
         });
 
-        if (this.usersPromoCode !== null) {
+        if (this.promo[this.usersPromoCode] && this.usersPromoCode !== null) {
           let discount = totalPrice * this.promo[promo].discountPercentage + this.promo[promo].discountRoubles;
 
-          if (promo === `gitara2020` && (discount / totalPrice > this.promo[promo].discountLimit)) {
+          if (discount / totalPrice > this.promo[promo].discountLimit) {
             discount = totalPrice * this.promo[promo].discountLimit;
           }
 
@@ -1296,6 +1308,31 @@
     }
   );
 
+  class PromoCode {
+    usePromoCode(submitHandler) {
+      const form = document.querySelector(`.discount__form`);
+
+      if (form) {
+        const button = form.querySelector(`.discount__button`);
+
+        button.addEventListener(`click`, (evt) => {
+          evt.preventDefault();
+
+          const formData = new FormData(form);
+          let code = null;
+
+          if (formData.get(`discount`)) {
+            code = formData.get(`discount`).toLowerCase();
+          }
+
+          submitHandler(code);
+        });
+      }
+    }
+  }
+
+  const promoCode = new PromoCode();
+
   function createCartTotalPriceTemplate(totalPrice) {
     return `<span>Всего: ${totalPrice} ₽</span>`;
   }
@@ -1310,9 +1347,11 @@
     renderTotalPrice(totalPrice) {
       const totalPricecontainer = document.querySelector(`.total-price`);
 
-      this.deleteChildrenElements(totalPricecontainer);
+      if (totalPricecontainer) {
+        this.deleteChildrenElements(totalPricecontainer);
 
-      this.renderElement(totalPricecontainer, this.createCartTotalPriceTemplate(totalPrice));
+        this.renderElement(totalPricecontainer, this.createCartTotalPriceTemplate(totalPrice));
+      }
     }
   }
 
@@ -1327,15 +1366,17 @@
   );
 
   class CartPresenter {
-    constructor(state, shoppingCartView, cartView, totalPriceView) {
+    constructor(state, shoppingCartView, cartView, promoCodeView, totalPriceView) {
       this.state = state;
       this.shoppingCartView = shoppingCartView;
       this.cartView = cartView;
+      this.promoCodeView = promoCodeView;
       this.totalPriceView = totalPriceView;
 
       this.increaseClickHandler = this.increaseClickHandler.bind(this);
       this.decreaseClickHandler = this.decreaseClickHandler.bind(this);
       this.deleteClickHandler = this.deleteClickHandler.bind(this);
+      this.submitClickHandler = this.submitClickHandler.bind(this);
     }
 
     init() {
@@ -1344,6 +1385,8 @@
       this.renderShoppingCartValue();
 
       this.renderCart();
+
+      this.usePromoCode();
 
       this.renderShoppingCartTotalPrice();
     }
@@ -1354,6 +1397,10 @@
 
     renderShoppingCartValue() {
       this.shoppingCartView.renderShoppingCartValue(this.state.countGoodsInShoppingCart());
+    }
+
+    usePromoCode() {
+      this.promoCodeView.usePromoCode(this.submitClickHandler);
     }
 
     renderShoppingCartTotalPrice() {
@@ -1412,12 +1459,28 @@
 
       // перерисовываем корзину товаров
       this.renderCart();
+
+      // перерисовываем total price
+      this.renderShoppingCartTotalPrice();
+    }
+
+    submitClickHandler(code) {
+      // записываем введённый промо-код в state
+      this.state.setUsersPromoCode(code);
+
+      // проверяем промо-код; если не подходит - отрисовываем сообщение пользователю
+      if (!this.state.validateUsersPromoCode()) {
+        console.log(`Такого промокода не существует!`);
+      }
+
+      // перерисовываем total price с учетом скидки
+      this.renderShoppingCartTotalPrice();
     }
   }
 
   const state = new State(catalogData);
   const catalogPresenter = new CatalogPresenter(state, catalogView, popup, shoppingCart, pagination, filters, sort);
-  const cartPresenter = new CartPresenter(state, shoppingCart, cart, totalPrice);
+  const cartPresenter = new CartPresenter(state, shoppingCart, cart, promoCode, totalPrice);
 
   catalogPresenter.init();
   cartPresenter.init();
