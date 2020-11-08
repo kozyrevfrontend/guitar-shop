@@ -2,7 +2,7 @@ export function createCatalogItemTemplate(card) {
   return (
     `<li class="catalog__item card">
     <h3 class="card__title">${card.model}</h3>
-    <span class="card__price">${card.price} ₽</span>
+    <span class="card__price">${card.price.toLocaleString(`ru-RU`)} ₽</span>
     <div class="card__popularity-wrapper">
       <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
       <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>

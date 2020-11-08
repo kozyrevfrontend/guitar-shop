@@ -516,7 +516,7 @@
     return (
       `<li class="catalog__item card">
     <h3 class="card__title">${card.model}</h3>
-    <span class="card__price">${card.price} ₽</span>
+    <span class="card__price">${card.price.toLocaleString(`ru-RU`)} ₽</span>
     <div class="card__popularity-wrapper">
       <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
       <svg width="10" height="10"><use href="img/sprite_auto.svg#icon-star"></use></svg>
@@ -612,7 +612,7 @@
       <div class="popup-add__wrapper">
         <picture>
           <source type="image/webp" srcset="img/${card.image}@1x.webp 1x, img/${card.image}@2x.webp 2x">
-          <img src="img/${card.image}@1x.png" srcset="img/${card.image}@1x.png 2x" alt="${card.model}" width="56" height="128">
+          <img src="img/${card.image}@1x.png" srcset="img/${card.image}@1x.png 2x" alt="${card.model}" width="48" height="124">
         </picture>
         <div class="popup-add__description">
           <h3 class="popup-add__model">Гитара ${card.model}</h3>
