@@ -95,6 +95,7 @@
   display: flex;
   align-self: center;
   padding-bottom: 37px;
+  margin-right: 60px;
 }
 
 .cart__count-decrease,
@@ -180,10 +181,15 @@
   }
 
   .cart__wrapper {
+    max-width: 600px;
     margin-right: 0;
   }
 
   .cart__catalog-price {
+    margin-right: 0;
+  }
+
+  .cart__count {
     margin-right: 0;
   }
 
