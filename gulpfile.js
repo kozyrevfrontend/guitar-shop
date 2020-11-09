@@ -51,7 +51,6 @@ gulp.task("server", function () {
     ["source/js/main.js", "source/js/**/**/**/*.js"],
     gulp.series("js-main", "refresh")
   );
-  gulp.watch("source/js/vendor.js", gulp.series("js-vendor", "refresh"));
 });
 
 gulp.task("refresh", function (done) {
@@ -116,25 +115,12 @@ gulp.task("js-main", () => {
   );
 });
 
-gulp.task("js-vendor", () => {
-  return (
-    gulp
-      .src("source/js/vendor.js")
-      .pipe(sourcemap.init())
-      // note that UMD and IIFE format requires `name` but it will be inferred from the source file name `mylibrary.js`
-      .pipe(rollup({ plugins: [resolve(), commonjs()] }, "iife"))
-      // save sourcemap as separate file (in the same folder)
-      .pipe(sourcemap.write(""))
-      .pipe(gulp.dest("build/js"))
-  );
-});
-
 gulp.task("clean", function () {
   return del("build");
 });
 
 gulp.task(
   "build",
-  gulp.series("clean", "copy", "css", "sprite", "html", "js-main", "js-vendor")
+  gulp.series("clean", "copy", "css", "sprite", "html", "js-main")
 );
 gulp.task("start", gulp.series("build", "server"));
