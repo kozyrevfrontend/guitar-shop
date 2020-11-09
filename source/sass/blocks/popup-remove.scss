@@ -39,6 +39,7 @@
 }
 
 .popup-remove__description {
+  max-width: 300px;
   margin-left: 45px;
   padding-top: 16px;
 }
@@ -94,8 +95,8 @@
 
 .popup-remove__button {
   display: block;
-  min-width: 220px;
-  height: 46px;
+  width: 220px;
+  min-height: 46px;
   margin-left: auto;
   margin-top: 16px;
   margin-bottom: 16px;
@@ -148,7 +149,7 @@
 .popup-remove__continue {
   display: block;
   width: 220px;
-  height: 46px;
+  min-height: 46px;
 
   font-size: 16px;
   font-weight: 700;
