@@ -81,7 +81,26 @@ export class CartPresenter {
     // перерисовываем total price
     this.renderShoppingCartTotalPrice();
 
-    if (this.state.shoppingCart[id].count === 1) {
+    if (this.state.shoppingCart[id].count === 0) {
+      // увеличиваем значение count в state
+      this.state.increaseCartCount(id);
+
+      // перерисовываем count
+      this.cartView.renderCartCount(this.state.shoppingCart[id]);
+
+      // удаляем старое значение кол-ва товаров в корзине из view
+      this.shoppingCartView.removeShoppingCartValue();
+
+      // перерисовываем общее кол-во товаров в корзине
+      this.renderShoppingCartValue();
+
+      // перерисовываем final price
+      this.cartView.renderCartFinalPrice(this.state.shoppingCart[id]);
+
+      // перерисовываем total price
+      this.renderShoppingCartTotalPrice();
+
+      // отрисовываем попап
       this.popupView.renderRemovePopup(this.state.shoppingCart[id], this.removeClickHandler);
     }
   }

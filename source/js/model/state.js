@@ -124,7 +124,7 @@ export class State {
   }
 
   decreaseCartCount(id) {
-    if (this.shoppingCart[id].count > 1) {
+    if (this.shoppingCart[id].count > 0) {
       this.shoppingCart[id].count--;
       this.shoppingCart[id].finalPrice = this.shoppingCart[id].count * this.shoppingCart[id].price;
       localStorage.setItem(`shoppingCart`, JSON.stringify(this.shoppingCart));
