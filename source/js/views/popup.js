@@ -20,6 +20,7 @@ class Popup {
     const popup = document.querySelector(`.popup`);
 
     document.body.removeChild(popup);
+    document.body.classList.remove(`overflow-hidden`);
     document.removeEventListener(`keydown`, this.closePopupEscPress);
   }
 
@@ -31,6 +32,8 @@ class Popup {
 
   renderPopupTemplate() {
     this.renderElement(document.body, this.createPopupTemplate());
+
+    document.body.classList.add(`overflow-hidden`);
 
     const popup = document.querySelector(`.popup`);
     const popupOverlay = popup.querySelector(`.popup__overlay`);
