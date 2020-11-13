@@ -14,11 +14,12 @@ class Filters {
       const twelveStringsCheckbox = filtersForm.querySelector(`#twelve-strings`);
 
       const comparePriceValues = (evt) => {
-        if (parseInt(evt.target.value, 10) < 0) {
-          evt.target.setCustomValidity(`Цена товара не может быть меньше 0`);
-          evt.target.value = ``;
-        } else {
-          evt.target.setCustomValidity(``);
+        if (evt.target.min && parseInt(evt.target.value, 10) < evt.target.min) {
+          evt.target.value = evt.target.min;
+        }
+
+        if (evt.target.max && parseInt(evt.target.value, 10) > evt.target.max) {
+          evt.target.value = evt.target.max;
         }
 
         if (parseInt(priceMin.value, 10) > parseInt(priceMax.value, 10)) {

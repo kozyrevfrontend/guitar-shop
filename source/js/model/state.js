@@ -45,6 +45,34 @@ export class State {
     this.usersPromoCode = null;
   }
 
+  getMaxCatalogPrice() {
+    const catalogItems = Object.values(this.catalogData);
+
+    const prices = [];
+
+    catalogItems.map((item) => {
+      prices.push(item.price);
+    });
+
+    const max = Math.max(...prices);
+
+    return max;
+  }
+
+  getMinCatalogPrice() {
+    const catalogItems = Object.values(this.catalogData);
+
+    const prices = [];
+
+    catalogItems.map((item) => {
+      prices.push(item.price);
+    });
+
+    const min = Math.min(...prices);
+
+    return min;
+  }
+
   setUsersPromoCode(code) {
     this.usersPromoCode = code;
   }
