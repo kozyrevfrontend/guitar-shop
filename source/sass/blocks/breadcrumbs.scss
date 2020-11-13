@@ -45,12 +45,12 @@
   line-height: 19px;
   color: #474747;
 
-  &:hover,
-  &:focus {
+  &:hover[href],
+  &:focus[href] {
     opacity: 0.8;
   }
 
-  &:active {
+  &:active[href] {
     opacity: 0.6;
   }
 }
